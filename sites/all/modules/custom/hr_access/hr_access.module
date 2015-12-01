@@ -46,6 +46,49 @@ function hr_access_node_access($node, $op, $account) {
 }
 
 /**
+ * Implement hook_entityform_access_alter().
+ *
+ * @param boolean $access
+ * @param $op
+ * @param $context
+ *  An associative array containing the following keys:
+ *  - entityform: The $entityform submission
+ *    If $op == 'submit' this will be a new Entityform Submission for the type.
+ *  - account: The Drupal user account that is doing the operation
+ */
+function hr_access_entityform_access_alter(&$access, $op, $context) {
+  global $user;
+
+  $entityform = $context['entityform'];
+
+  // Allow agency see only submission which has this agency as 'field_applicant_agencies'
+  if (in_array(HR_AGENCY_ROLE, $user->roles)) {
+    $access = FALSE;
+    $contacts = array();
+
+    $field_agencies = field_get_items('entityform', $entityform, 'field_applicant_agencies');
+    if (isset($field_agencies) && !empty($field_agencies)) {
+      foreach ($field_agencies as $agency) {
+        $agency_node = node_load($agency['target_id']);
+
+        if (isset($agency_node->nid) && $agency_node->type == 'agency') {
+          $field_agency_contact = field_get_items('node', $agency_node, 'field_agency_contact');
+          if (isset($field_agency_contact) && !empty($field_agency_contact)) {
+            foreach ($field_agency_contact as $contact) {
+              $contacts[] = $contact['target_id'];
+            }
+          }
+        }
+      }
+    }
+
+    if (in_array($user->uid, $contacts)) {
+      $access = TRUE;
+    }
+  }
+}
+
+/**
  * Implements hook_permission().
  */
 function hr_access_permission() {
