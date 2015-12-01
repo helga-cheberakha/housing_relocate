@@ -58,28 +58,11 @@ function hr_surveys_user_agency_block() {
   $links = array();
 
   if (user_is_logged_in() && isset($user->roles) && in_array(HR_AGENCY_ROLE, $user->roles)) {
-    // Get node by contact uid (reference field).
-    $query = new EntityFieldQuery();
-    $entities = $query->entityCondition('entity_type', 'node')
-      ->entityCondition('bundle', 'agency')
-      ->propertyCondition('status', 1)
-      ->fieldCondition('field_agency_contact', 'target_id', $user->uid, '=')
-      ->execute();
-
-    if (isset($entities['node']) && !empty($entities['node'])) {
-      $agency_node = array_shift($entities['node']);
-      if (isset($agency_node->nid)) {
-        $agency_nid = $agency_node->nid;
-      }
-    }
-
-    if (isset($agency_nid)) {
-      $links[] = array(
-        'title' => t('Online surveys'),
-        'href' => 'user/agency/' . $agency_nid . '/applicants',
-        'attributes' => array('class' => array('navbar-brand')),
-      );
-    }
+    $links[] = array(
+      'title' => t('Online surveys'),
+      'href' => 'agency/' . $user->uid . '/applicants',
+      'attributes' => array('class' => array('navbar-brand')),
+    );
   }
 
   if ($links) {

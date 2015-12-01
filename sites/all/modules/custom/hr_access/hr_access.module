@@ -14,11 +14,30 @@ define('HR_AGENCY_ROLE', 'agency');
  * @param $account
  */
 function hr_access_node_access($node, $op, $account) {
-  if (is_object($node) && user_is_anonymous()) {
+  if (is_object($node)) {
     if (drupal_is_front_page() && $op == 'view') {
       return NODE_ACCESS_ALLOW;
     }
-    else {
+    // Anonymous users can see only front page (from nodes)
+    elseif (user_is_anonymous()) {
+      return NODE_ACCESS_DENY;
+    }
+    // User 'agency' can see only node 'agency' which has this user as 'field_agency_contact'
+    elseif ($node->type == 'agency' && in_array(HR_AGENCY_ROLE, $account->roles)) {
+      $agency_contact = array();
+      if (isset($node->field_agency_contact) && !empty($node->field_agency_contact)) {
+        $field_agency_contact = field_get_items('node', $node, 'field_agency_contact');
+        if (isset($field_agency_contact) && !empty($field_agency_contact))  {
+          foreach ($field_agency_contact as $contact_uid) {
+            $agency_contact[] = $contact_uid['target_id'];
+          }
+        }
+      }
+
+      if ($agency_contact && in_array($account->uid, $agency_contact)) {
+        return NODE_ACCESS_ALLOW;
+      }
+
       return NODE_ACCESS_DENY;
     }
   }
@@ -35,9 +54,9 @@ function hr_access_permission() {
       'title' => t('Login via url'),
       'description' => t('Allow user to log in via URL.'),
     ),
-    'view user applicants' => array(
-      'title' => t('View own applicants (for agency)'),
-      'description' => t('Allow user view own applicants.'),
+    'view own applicants' => array(
+      'title' => t('View own applicants'),
+      'description' => t('Allow user view own applicants (for agency).'),
     ),
   );
 }
@@ -167,7 +186,7 @@ function hr_access_agency_login($hash = NULL) {
   if ($login) {
     $form_state['uid'] = $agency->uid;
     user_login_submit(array(), $form_state);
-    $redirect_path = 'user/agency/' . _hr_access_get_agency_node($agency->uid) . '/applicants';
+    $redirect_path = 'agency/' . $agency->uid . '/applicants';
 
     if (count($arg) > 2) {
       $arg_last_items = array_slice($arg, 2);
