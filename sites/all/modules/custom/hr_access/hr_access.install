@@ -1,0 +1,39 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the rh_access module.
+ */
+
+/**
+ * Implements hook_enable().
+ */
+function hr_access_enable() {
+  variable_set('site_403', 'hr-access');
+}
+
+/**
+ * Implements hook_disable().
+ */
+function hr_access_disable() {
+  variable_del('site_403');
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function hr_access_uninstall() {
+  variable_del('hr_access_private_key');
+}
+
+/**
+ * Update module weight to be after views.
+ */
+function hr_access_update_7001() {
+  db_update('system')
+    ->fields(array(
+      'weight' => 15,
+    ))
+    ->condition('name', 'hr_access')
+    ->execute();
+}

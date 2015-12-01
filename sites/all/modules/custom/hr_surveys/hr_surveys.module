@@ -1,0 +1,446 @@
+<?php
+/**
+ * @file
+ * Surveys functionality module.
+ */
+
+define('HR_SURVEY_TYPE', 'survey');
+define('HR_SURVEY_FORM', 'survey_entityform_edit_form');
+define('HR_APPLICANT_ROLE', 'applicant');
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * @param $form
+ * @param $form_state
+ * @param $form_id
+ */
+function hr_surveys_form_field_ui_field_edit_form_alter(&$form, &$form_state, $form_id) {
+  $instance = $form['#instance'];
+  $additional_settings = FALSE;
+
+  // Adds additional settings only to simple field of the entityform 'survey'
+  if ($instance['entity_type'] == 'entityform' && $instance['bundle'] == HR_SURVEY_TYPE) {
+    $additional_settings = TRUE;
+  }
+
+  if ($additional_settings && !$form['#field']['locked']) {
+    $form['instance']['settings']['hr_surveys_question'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Add to survey'),
+      '#description' => t('Add the field to the survey.'),
+      '#default_value' => (isset($instance['settings']['hr_surveys_question'])) ? $instance['settings']['hr_surveys_question'] : 1,
+      // Display just below the 'required' checkbox.
+      '#weight' => $form['instance']['required']['#weight'] + .1,
+    );
+  }
+}
+
+/**
+ * Implement hook_form_alter().
+ *
+ * @param $form
+ * @param $form_state
+ * @param $form_id
+ */
+function hr_surveys_form_alter(&$form, $form_state, $form_id) {
+  if ($form_id == HR_SURVEY_FORM) {
+    // Exclude field from survey form if it doesn't have checkbox 'Add to survey' as checked
+    // Only when new survey will be created
+    if (isset($form['#entity']->is_new) && $form['#entity']->is_new) {
+      foreach (field_info_instances('entityform', HR_SURVEY_TYPE) as $field_name => $instance) {
+        if (isset($form[$field_name]) && isset($instance['settings']['hr_surveys_question']) && !$instance['settings']['hr_surveys_question']) {
+          $form[$field_name]['#access'] = FALSE;
+        }
+      }
+
+      // Show/hide additional information about pets. Depends on status of the checkbox 'field_habitation_pets'
+      if (isset($form['field_habitation_pets']) && isset($form['field_habitation_pets_info'])) {
+        $lang_pets = (isset($form['field_habitation_pets']['#language']) && !empty($form['field_habitation_pets']['#language'])) ? $form['field_habitation_pets']['#language'] : LANGUAGE_NONE;
+        $lang_pets_info = (isset($form['field_habitation_pets_info']['#language']) && !empty($form['field_habitation_pets_info']['#language'])) ? $form['field_habitation_pets_info']['#language'] : LANGUAGE_NONE;
+
+        if (isset($form['field_habitation_pets'][$lang_pets]) && isset($form['field_habitation_pets_info'][$lang_pets_info][0]['value'])) {
+          $form['field_habitation_pets_info'][$lang_pets_info][0]['value']['#states'] = array(
+            'visible' => array(
+              'input[name="field_habitation_pets[' . $lang_pets . ']"]' => array('checked' => TRUE),
+            )
+          );
+        }
+      }
+
+      // Add custom submit handler
+      // Create new user after survey entityfotm submittion
+      $form['#submit'][] = 'hr_surveys_entityform_form_submit';
+      if (isset($form['actions']['submit'])) {
+        $form['actions']['submit']['#submit'][] = 'hr_surveys_entityform_form_create_submit';
+      }
+    }
+    else {
+      // Add custom submition handler to redirect to 'admin/surveys' after submit
+      $form['#submit'][] = 'hr_surveys_entityform_form_edit_submit';
+      if (isset($form['actions']['save'])) {
+        $form['actions']['save']['#submit'][] = 'hr_surveys_entityform_form_edit_submit';
+      }
+    }
+
+    // Add custom validate handler
+    if (isset($form['actions']['submit'])) {
+      $form['actions']['submit']['#validate'][] = 'hr_surveys_entityform_form_validate';
+    }
+  }
+}
+
+/**
+ * Validate callback.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function hr_surveys_entityform_form_validate($form, &$form_state) {
+  // Validate check in date
+  $now = time();
+  $values = $form_state['values'];
+
+  if (isset($form['field_habitation_checkin'])) {
+    $lang = (isset($form['field_habitation_checkin']['#language'])) ? $form['field_habitation_checkin']['#language'] : LANGUAGE_NONE;
+
+    if (isset($values['field_habitation_checkin'][$lang][0]['value']) && $values['field_habitation_checkin'][$lang][0]['value'] <= $now) {
+      form_set_error('field_habitation_checkin', t('Check in date can\'t be in past. Please enter a valid check in date.'));
+    }
+  }
+
+  // Validate email field
+  if (isset($form['field_applicant_email'])) {
+    $lang_email = (isset($form['field_applicant_email']['#language'])) ? $form['field_applicant_email']['#language'] : LANGUAGE_NONE;
+
+    if (isset($values['field_applicant_email'][$lang_email][0]['value']) && !valid_email_address($values['field_applicant_email'][$lang_email][0]['value'])) {
+      form_set_error('field_applicant_email', t('Please enter a valid email address.'));
+    }
+  }
+}
+
+/**
+ * Submit callback to create new user after survey entityfotm submittion.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function hr_surveys_entityform_form_create_submit($form, &$form_state) {
+  $entityform = $form_state['entityform'];
+  if (isset($entityform->entityform_id) && $entityform->entityform_id) {
+    $field_user_mail = field_get_items('entityform', $entityform, 'field_applicant_email');
+
+    if (isset($field_user_mail[0]['value']) && !empty($field_user_mail[0]['value'])) {
+      $mail = $field_user_mail[0]['value'];
+
+      // Make sure the user email isn't already taken.
+      $query = db_select('users', 'u')
+        ->fields('u', array('uid'))
+        ->condition('u.mail', $mail)
+        ->execute();
+      $uid = $query->fetchField();
+
+      if ($uid) {
+        _hr_surveys_entityform_add_user($uid, $entityform);
+      }
+      // Create new user if user with current email doesn't exist yet
+      else {
+        $uid = _hr_surveys_entityform_create_user($mail, $entityform);
+        if ($uid) {
+          _hr_surveys_entityform_add_user($uid, $entityform);
+        }
+      }
+    }
+
+    // Send email to admin
+
+  }
+}
+
+/**
+ * Submit callback to create new user after survey entityfotm submittion.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function hr_surveys_entityform_form_edit_submit($form, &$form_state) {
+  // Redirect to 'admin/surveys' after submit
+  $form_state['redirect'] = 'admin/surveys';
+}
+
+/**
+ * Implements hook_field_widget_form_alter().
+ *
+ * @param $element
+ *  The field widget form element as constructed by hook_field_widget_form().
+ * @param $form_state
+ *  An associative array containing the current state of the form.
+ * @param $context
+ *  An associative array containing the following key-value pairs, matching the arguments received by hook_field_widget_form()
+ */
+function hr_surveys_field_widget_form_alter(&$element, &$form_state, $context) {
+  if (isset($element['#field_name']) && $element['#field_name'] == 'field_applicant_agencies' && $element['#entity_type'] == 'entityform' && $element['#bundle'] == HR_SURVEY_TYPE && isset($element['#options']) && !empty($element['#options'])) {
+    // Gets a referenced town for the current survey
+    if (isset($element['#entity']) && !empty($element['#entity']) && isset($element['#entity']->entityform_id)) {
+      $field_towns = field_get_items('entityform', $element['#entity'], 'field_habitation_town');
+      
+      if (isset($field_towns) && !empty($field_towns)) {
+        foreach ($field_towns as $item) {
+          $town_tids[] = $item['target_id'];
+        }
+
+        // If town exists get all agencies which have references to the same town
+        $view_name = $view_display = NULL;
+        // Gets field's settings
+        if (isset($context['field']['settings']['handler']) && $context['field']['settings']['handler'] == 'views' && isset($context['field']['settings']['handler_settings']['view'])) {
+          $view_name = $context['field']['settings']['handler_settings']['view']['view_name'];
+          $view_display = $context['field']['settings']['handler_settings']['view']['display_name'];
+        }
+
+        if ($view_name && $view_display) {
+          $agencies_bytown = array();
+          foreach ($town_tids as $tid) {
+            $result = views_get_view_result($view_name, $view_display, $tid);
+
+            if (isset($result) && !empty($result)) {
+              foreach ($result as $item) {
+                $agencies_bytown[$item->nid] = $item->node_title;
+              }
+            }
+          }
+
+          // Update options array
+          // Leave only agencies which have references to the same town as the current survey
+          if ($agencies_bytown) {
+            foreach ($element['#options'] as $key => $value) {
+              if (!array_key_exists($key, $agencies_bytown)) {
+                unset($element['#options'][$key]);
+              }
+            }
+          }
+          else {
+            $element['#options'] = array();
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_views_api().
+ */
+function hr_surveys_views_api() {
+  return array(
+    'api' => '3.0',
+    'path' => drupal_get_path('module', 'hr_surveys'),
+  );
+}
+
+/**
+ *  Implements hook_block_info();
+ */
+function hr_surveys_block_info() {
+  $blocks = array();
+
+  $blocks['hr_surveys_user_block'] = array(
+    'info' => t('User block'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+
+  $blocks['hr_surveys_user_agency_block'] = array(
+    'info' => t('Agency user block'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function hr_surveys_block_view($delta = '') {
+  $block = array();
+
+  switch ($delta) {
+    case 'hr_surveys_user_block':
+      module_load_include('inc', 'hr_surveys', 'hr_surveys.block');
+      $block['subject'] = '';
+      $block['content'] = hr_surveys_user_block();
+      break;
+    case 'hr_surveys_user_agency_block':
+      module_load_include('inc', 'hr_surveys', 'hr_surveys.block');
+      $block['subject'] = '';
+      $block['content'] = hr_surveys_user_agency_block();
+      break;
+  }
+
+  return $block;
+}
+
+/**
+ * Implements hook_field_formatter_info().
+ */
+function hr_surveys_field_formatter_info() {
+  // Add formatters to display boolean as YES/NO
+  return array(
+    'hr_surveys_boolean_yesno' => array(
+      'label' => t('Boolean as yes/no'),
+      'field types' => array('list_boolean'),
+    ),
+    'hr_surveys_textemail' => array(
+      'label' => t('Text as email'),
+      'field types' => array('text'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_formatter_view().
+ */
+function hr_surveys_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  $element = array();
+
+  switch ($display['type']) {
+    case 'hr_surveys_boolean_yesno':
+      foreach ($items as $delta => $item) {
+        $element[$delta] = array(
+          '#theme' => 'hr_surveys_boolean_yesno_formatter',
+          '#item' => $item,
+        );
+      }
+      break;
+    case 'hr_surveys_textemail':
+      foreach ($items as $delta => $item) {
+        $element[$delta] = array(
+          '#theme' => 'hr_surveys_textemail_formatter',
+          '#item' => $item,
+        );
+      }
+      break;
+  }
+
+  return $element;
+}
+
+/**
+ * Implements hook_theme();
+ */
+function hr_surveys_theme() {
+  return array(
+    'hr_surveys_boolean_yesno_formatter' => array(
+      'variables' => array('item' => NULL),
+    ),
+    'hr_surveys_textemail_formatter' => array(
+      'variables' => array('item' => NULL),
+    ),
+  );
+}
+
+/**
+ * Theme to display boolean as Yes / No
+ */
+function theme_hr_surveys_boolean_yesno_formatter($variables) {
+  $item = $variables['item'];
+  $output = ($item['value']) ? t('Yes') : t('No');
+  return $output;
+}
+
+/**
+ * Theme to display textfield as email
+ */
+function theme_hr_surveys_textemail_formatter($variables) {
+  $item = $variables['item'];
+  $output = '';
+
+  if (isset($item['value']) && !empty($item['value'])) {
+    $output = (valid_email_address($item['value'])) ? l($item['value'], 'mailto:' . $item['value'], array('absolute' => TRUE)) : $item['value'];
+  }
+
+  return $output;
+}
+
+/**
+ * Helper function
+ * Creates new user after submittion entityform 'survey'
+ *
+ * @param $mail
+ *    Email address of a new user
+ * @param $entityform
+ *    Object of the entityform
+ *
+ * @return integer
+ */
+function _hr_surveys_entityform_create_user($mail, $entityform) {
+  // Use the e-mail address prefix as a user name.
+  $name = substr($mail, 0, strpos($mail, '@'));
+
+  // Make sure the user name isn't already taken.
+  $query = db_select('users', 'u')
+    ->fields('u', array('uid'))
+    ->condition('u.name', $name)
+    ->execute();
+  $uid = $query->fetchField();
+
+  // If the user name is taken, append a random string to the end of it.
+  if ($uid) { 
+    $name .= '_' . user_password(4);
+  }
+
+  // Created user has role 'applicant'
+  // Find rid of the role 'applicant'
+  $rid_applicant = user_role_load_by_name(HR_APPLICANT_ROLE)->rid;
+
+  // Build the user account object and then save it.
+  $account = entity_create('user', array('created' => time()));
+  try {
+    $account->name = $name;
+    $account->pass = user_password(8);
+    $account->mail = $mail;
+    $account->init = $mail;
+    $account->status = 1;
+    $account->roles = array(
+      DRUPAL_AUTHENTICATED_RID => 'authenticated user',
+      $rid_applicant => HR_APPLICANT_ROLE,
+    );
+    $account->signature_format = 'filtered_html';
+    $account->language = LANGUAGE_NONE;
+  } catch (Exception $e) {
+    watchdog('hr_surveys', $e->getMessage());
+  }
+ 
+  try {
+    entity_save('user', $account);
+  } catch (Exception $e) {
+    watchdog('hr_surveys', $e->getMessage());
+  }
+
+  $wrapper = entity_metadata_wrapper('user', $account);
+  // Get full name of a new user from online survey form
+  $field_user_full_name = field_get_items('entityform', $entityform, 'field_applicant_name');
+  if (isset($field_user_full_name[0]['value']) && !empty($field_user_full_name[0]['value'])) {
+    $wrapper->field_user_full_name->set($field_user_full_name[0]['value']);
+  }
+  $wrapper->save();
+  
+  if (isset($account->uid) && $account->uid) {
+    return $account->uid;
+  }
+  else {
+    return NULL;
+  }
+}
+
+/**
+ * Helper function
+ * Add user UID to object of the entityform and save entityform
+ *
+ * @param $uid
+ *    UID of the user
+ * @param $entityform
+ *    Object of the entityform
+ */
+function _hr_surveys_entityform_add_user($uid, $entityform) {
+  $entityform->uid = $uid;
+  entityform_save($entityform);
+}

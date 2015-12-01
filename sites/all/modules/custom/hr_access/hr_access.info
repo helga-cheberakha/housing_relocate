@@ -1,0 +1,6 @@
+name = Housing Relocate Access
+description = Process access for applicants and agencies
+core = 7.x
+version = 7.x-1.0
+package = HR
+project = hr_access

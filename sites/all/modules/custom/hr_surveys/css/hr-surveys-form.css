@@ -1,0 +1,27 @@
+#editableviews-entity-form-online-surveys .views-table {
+  width: 100%;
+}
+#editableviews-entity-form-online-surveys .views-table td.views-field > span,
+#editableviews-entity-form-online-surveys .views-table td.views-field .views-row-edit-wrap {
+  display: block;
+}
+.views-row-edit-static-wrap {
+  clear: both;
+  overflow: hidden;
+  width: 100%;
+}
+.views-row-edit-static-wrap .rollup-btn-wrap {
+  text-align: right;
+  float: right;
+}
+.views-row-edit-static-wrap .views-row-edit-static {
+  float: left;
+  margin: 0 5px 0 0;
+}
+.views-row-edit-static-wrap .rollup-btn {
+  color: #0074bd;
+  cursor: pointer;
+}
+.views-row-edit-static-wrap .rollup-btn:hover {
+  text-decoration: underline;
+}

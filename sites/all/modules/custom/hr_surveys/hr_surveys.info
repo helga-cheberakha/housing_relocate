@@ -1,0 +1,12 @@
+name = Housing Relocate Survey
+description = Housing Relocate Survey process
+core = 7.x
+version = 7.x-1.0
+package = HR
+project = hr_surveys
+
+dependencies[] = entityform
+dependencies[] = editableviews
+
+; Handlers
+files[] = handlers/hr_editableviews_plugin_style_row_edit_table.inc

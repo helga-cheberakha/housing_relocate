@@ -1,0 +1,127 @@
+/**
+ * Header styling
+ */
+#navbar {
+  padding: 0;
+  min-height: auto;
+}
+#navbar .navbar-header {
+  margin: 0 auto;
+  width: 100%;
+  background: #ebebeb;
+}
+#navbar .navbar-header .img-logo {
+  display: block;
+  margin: 0 auto;
+}
+
+/**
+ * Main content container styling
+ */
+.main-container {
+  margin-bottom: 4em;
+}
+
+/*
+ * Survey styling
+ */
+.pre-instructions {
+  margin: 0 0 1em;
+}
+.form-actions {
+  margin: 3em 0 1em;
+}
+.field-name-field-habitation-maxprice .form-item .form-group {margin: 0;}
+.sliderfield-event-field-container .sliderfield-value-field {
+  width: 15%;
+  margin-bottom: 1em;
+}
+.group-account-info,
+.group-two-colm,
+.field-name-field-habitation-naddress,
+.field-name-field-habitation-pets-info {margin-bottom: 2.5em;}
+.hr-group-inline {
+  overflow: hidden;
+  width: 100%;
+}
+.hr-group-inline > .form-group,
+.hr-group-inline > .two-columns {
+  float: left;
+  width: 100%;
+}
+.hr-group-inline > .two-columns {margin-bottom: 15px;}
+.hr-group-inline > .form-group .form-item,
+.hr-group-inline > .two-columns > .form-wrapper,
+.hr-group-inline > .two-columns .group-habitation-occupants{
+  width: 95%;
+}
+.group-habitation-occupants h3 {
+  font-weight: bold;
+  font-size: 14px;
+}
+.field-name-field-occupants-adults,
+.field-name-field-occupants-kids {
+  overflow: hidden;
+  width: 100%;
+}
+.field-name-field-occupants-adults label,
+.field-name-field-occupants-kids label {
+  font-weight: normal;
+  float: left;
+  width: 120px;
+}
+.field-name-field-occupants-adults select,
+.field-name-field-occupants-kids select {
+  float: left;
+  width: auto;
+}
+.field-name-field-habitation-checkin .date-combo {
+  border: none;
+  box-shadow: none;
+}
+.field-name-field-habitation-checkin .date-combo .panel-heading {
+  background: none;
+  border: none;
+  padding: 0;
+  margin-bottom: 5px;
+  font-weight: bold;
+  font-size: 14px;
+}
+.field-name-field-habitation-checkin .date-combo .panel-title {font-size: 14px;}
+.field-name-field-habitation-checkin .date-combo .panel-body,
+.field-name-field-habitation-checkin .date-combo .panel-body .date-padding {padding: 0;}
+.field-name-field-habitation-checkin .date-combo .panel-body label {display: none;}
+.field-name-field-habitation-town .form-checkboxes {
+  width: 100%;
+  overflow: hidden;
+}
+.field-name-field-habitation-town .form-checkboxes .checkbox {
+  float: left;
+  width: 33%;
+}
+.field-name-field-habitation-town .form-checkboxes .checkbox + .checkbox {margin-top: 0;}
+
+@media all and (min-width: 600px) {
+  .hr-group-inline > .form-group,
+  .hr-group-inline > .two-columns {
+    width: 50%;
+  }
+}
+
+/*
+ * User block
+ */
+.navbar-collapse.collapse {padding: 5px 10px;}
+.navbar > .container .navbar-brand {
+  margin: 0;
+  line-height: 28px;
+}
+ #block-hr-surveys-hr-surveys-user-block {
+  float: right;
+ }
+.list-inline.hr-user-block {
+  margin: 13px 0 10px;
+  float: right;
+}
+
+.field-group-table th {width: 20%;}

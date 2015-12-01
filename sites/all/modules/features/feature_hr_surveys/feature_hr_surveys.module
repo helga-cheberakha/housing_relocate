@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Feature HR Surveys feature.
+ */
+
+include_once 'feature_hr_surveys.features.inc';

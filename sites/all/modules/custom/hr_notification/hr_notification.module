@@ -1,0 +1,203 @@
+<?php
+/**
+ * @file
+ * Surveys functionality module.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function hr_notification_menu() {
+  $items = array();
+
+  module_load_include('module', 'hr_access', 'hr_access');
+  $items['survey/%entityform/applicant/%user/agency/notify'] = array(
+    'title' => 'Notify the agency',
+    'page callback' => 'hr_notification_submission_agency',
+    'page arguments' => array(1, 3),
+    'access arguments' => array(array('administrator', 'super administrator')),
+    'access callback' => 'hr_access_user_has_role',
+    'type' => MENU_CALLBACK,
+  );
+
+  // Admin page for custom settings
+  $items['admin/config/hr'] = array(
+    'title' => 'HR Settings',
+    'description' => 'Settings for notification emails.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('hr_notification_notification_admin_form'),
+    'access arguments' => array('administer site configuration'),
+    'file' => 'hr_notification.admin.inc',
+  );
+  $items['admin/config/hr/notification'] = array(
+    'title' => 'Notification',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -10
+  );
+
+  return $items;
+}
+
+/**
+ * Menu callback - Notify agency about submission
+ *
+ * @param $entityform
+ * @param $user
+ */
+function hr_notification_submission_agency($entityform, $user) {
+  $message = array();
+
+  if (!isset($entityform->entityform_id)) {
+    $message = t('There is no submission by this unique identifier. Please contact') . ' ' . l(t('administrator'), 'mailto:' . $site_mail);
+    drupal_set_message($message, 'error');
+
+    header('Location: ' . url('admin/surveys', array('absolute' => TRUE)), TRUE);
+    drupal_exit();
+  }
+
+  if (!isset($user->uid)) {
+    $message = t('There is no applicant by this unique identifier. Please contact') . ' ' . l(t('administrator'), 'mailto:' . $site_mail);
+    drupal_set_message($message, 'error');
+
+    header('Location: ' . url('admin/surveys', array('absolute' => TRUE)), TRUE);
+    drupal_exit();
+  }
+
+  // Get all agencies attached to current submission
+  $field_agencies = field_get_items('entityform', $entityform, 'field_applicant_agencies');
+  if (!isset($field_agencies) || empty($field_agencies)) {
+    $message = t('There are no any agencies. Please contact') . ' ' . l(t('administrator'), 'mailto:' . $site_mail);
+    drupal_set_message($message, 'error');
+
+    header('Location: ' . url('admin/surveys', array('absolute' => TRUE)), TRUE);
+    drupal_exit();
+  }
+
+  foreach ($field_agencies as $item) {
+    if (isset($item['target_id'])) {
+      // Load node 'agency' to get UID of the agency contact
+      $agency_node = node_load($item['target_id']);
+
+      if (isset($agency_node->nid)) {
+        // Gat agency contact
+        $field_agency_user = field_get_items('node', $agency_node, 'field_agency_contact');
+
+        if (isset($field_agency_user) && !empty($field_agency_user)) {
+          foreach ($field_agency_user as $user_uid) {
+            if (isset($user_uid['target_id'])) {
+              // Load user 'agency' to get contact mail
+              $agency_user = user_load($user_uid['target_id']);
+
+              if (isset($agency_user->mail) && in_array(HR_AGENCY_ROLE, $agency_user->roles)) {
+                $mail_to = $agency_user->mail;
+                $mail_from = variable_get('site_mail', ini_get('sendmail_from'));
+
+                // Build token list
+                $submission_url = '';
+                $hash_field = field_get_items('user', $agency_user, 'field_agency_hash');
+                if (isset($hash_field[0]['value']) && !empty($hash_field[0]['value'])) {
+                  $submission_url .= 'access/' . $hash_field[0]['value'] . '/';
+                }
+                $submission_url .= 'entityform/' . $entityform->entityform_id;
+                $data = array(
+                  'submission_url' => url($submission_url, array('absolute' => TRUE)),
+                );
+
+                // Get mail subject
+                $subject = variable_get('hr_notification_agency_esubject', t('Survey submission'));
+                // Get mail message
+                $body_array = variable_get('hr_notification_agency_ebody', array());
+                $format = (isset($body_array['format']) && !empty($body_array['format'])) ? $body_array['format'] : 'full_html';
+                $body = (isset($body_array['value'])) ? t(check_markup($body_array['value'], $format)) : '';
+                
+                $params = array(
+                  'subject' => token_replace($subject, $data),
+                  'body' => token_replace($body, $data),
+                );
+
+                drupal_mail('hr_notification', 'hr_notification_send_email', $mail_to, language_default(), $params, $mail_from);
+                $message[] = t('The notification email has been sent to @email (agency @title).', array(
+                  '@email' => $mail_to,
+                  '@title' => $agency_node->title,
+                ));
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  if ($message) {
+    drupal_set_message(theme('item_list', array('items' => $message,'title' => null,'type' => 'ul','attributes' => array())));
+  }
+
+  header('Location: ' . url('admin/surveys', array('absolute' => TRUE)), TRUE);
+  drupal_exit();
+}
+
+/**
+ * Implements hook_mail()
+ */
+function hr_notification_mail($key, &$message, $params) {
+  switch ($key) {
+    case 'hr_notification_send_email':
+      $message['headers'] = array(
+        'MIME-Version' => '1.0',
+        'Content-Type' => 'text/html; charset=UTF-8; format=flowed',
+        'Content-Transfer-Encoding' => '8Bit',
+        'X-Mailer' => 'Drupal'
+      );
+      $message['subject'] = $params['subject'];
+      $message['body'][] = $params['body'];
+      break;
+  }
+}
+
+/**
+ * Implements hook_token_info().
+ */
+function hr_notification_token_info() {
+  $info = array();
+
+  $info['types']['hr_notify'] = array(
+    'name' => t('House relocate notification'),
+    'description' => t('A token type for hr notification tokens.'),
+  );
+
+  $info['tokens']['hr_notify'] = array(
+    'submission_url' => array(
+      'name' => t('Submission absolute URL'),
+      'description' => t('Submission absolute URL'),
+    ),
+  );
+
+  return $info;
+}
+
+/**
+ * Implements hook_tokens().
+ */
+function hr_notification_tokens($type, $tokens, array $data = array(), array $options = array()) {
+  $replacements = array();
+
+  // Replacement values for tokens that can be calculated without any additional
+  // data.
+  if ($type == 'hr_notify') {
+    foreach ($tokens as $name => $original) {
+      switch ($name) {
+        case 'submission_url':
+          if (isset($data['submission_url'])) {
+            $replacements[$original] = $data['submission_url'];
+          }
+          else {
+            $replacements[$original] = '';
+          }
+          break;
+      }
+    }
+  }
+
+  // An array of replacement values keyed by original token string.
+  return $replacements;
+}

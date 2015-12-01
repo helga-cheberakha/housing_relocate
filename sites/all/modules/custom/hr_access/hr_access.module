@@ -1,0 +1,451 @@
+<?php
+/**
+ * @file
+ * Surveys functionality module.
+ */
+
+define('HR_AGENCY_ROLE', 'agency');
+
+/**
+ * Implement hook_node_access().
+ *
+ * @param $node
+ * @param $op
+ * @param $account
+ */
+function hr_access_node_access($node, $op, $account) {
+  if (is_object($node) && user_is_anonymous()) {
+    if (drupal_is_front_page() && $op == 'view') {
+      return NODE_ACCESS_ALLOW;
+    }
+    else {
+      return NODE_ACCESS_DENY;
+    }
+  }
+
+  return NODE_ACCESS_IGNORE;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function hr_access_permission() {
+  return array(
+    'login via url' => array(
+      'title' => t('Login via url'),
+      'description' => t('Allow user to log in via URL.'),
+    ),
+    'view user applicants' => array(
+      'title' => t('View own applicants (for agency)'),
+      'description' => t('Allow user view own applicants.'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_menu().
+ */
+function hr_access_menu() {
+  $items = array();
+
+  $items['admin/config/system/agency_key'] = array(
+    'title' => 'Agency security key',
+    'description' => 'Configure security key for agencies.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('hr_access_admin_form'),
+    'access arguments' => array('administer uuid'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'hr_access.admin.inc',
+  );
+
+  $items['admin/config/system/agency_key/generate'] = array(
+    'title' => 'Generate security agencies key',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('hr_access_key_generate_confirm'),
+    'access arguments' => array('administer uuid'),
+    'file' => 'hr_access.admin.inc',
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['hr-access'] = array(
+    'page callback' => 'hr_access_redirect',
+    'access callback' => 'hr_access_access_callback',
+    'type' => MENU_CALLBACK,
+    'title' => 'Access denied',
+    'description' => 'You are not authorized to access this page.',
+  );
+
+  $items['access/%'] = array(
+    'page callback' => 'hr_access_agency_login',
+    'page arguments' => array(1),
+    'access callback' => 'hr_access_access_callback',
+    'type' => MENU_CALLBACK,
+    'title' => 'Link to account',
+    'description' => 'Linknks a URL to an account',
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_menu_alter().
+ *
+ * @param $items
+ */
+function hr_access_menu_alter(&$items) {
+  global $user;
+
+  if (isset($items['admin/surveys'])) {
+    $items['admin/surveys']['weight'] = -100;
+  }
+}
+
+/**
+ * Without an access callback on the menu item for rh_access_redirect,
+ * the redirect will be 403 and just have the default access denied page anyway.
+ */
+function hr_access_access_callback() {
+  return TRUE;
+}
+
+/**
+ *  Implements access callback by user role
+ */
+function hr_access_user_has_role($roles = array()) {
+  global $user;
+
+  foreach ($roles as $role) {
+    if (in_array($role, $user->roles)) {
+      return TRUE;
+    }
+  }
+  return FALSE;
+}
+
+/**
+ * Menu callback for /hr-access
+ *
+ * Redirect anonymous users from 403 Access Denied pages to the front page
+ */
+function hr_access_redirect() {
+  global $user, $language;
+
+  if (user_is_anonymous()) {
+    $redirect_path = '<front>';
+    $code = 302;
+    header('Location: ' . url($redirect_path, array('absolute' => TRUE)), TRUE, $code);
+    drupal_exit();
+  }
+}
+
+/**
+ * Menu callback
+ *
+ * Login user via url
+ */
+function hr_access_agency_login($hash = NULL) {
+  $arg = arg();
+  $login = FALSE;
+
+  if ($hash) {
+    // Load user by hash from url
+    $agency = _hr_access_agency_user_load_by_hash($hash);
+
+    // Check if user exists and has access to login via url
+    if ($agency && user_access('login via url', $agency)) {
+      $login = TRUE;
+    }
+    else {
+      $login = FALSE;
+    }
+  }
+  else {
+    $login = FALSE;
+  }
+
+  // Log in user
+  if ($login) {
+    $form_state['uid'] = $agency->uid;
+    user_login_submit(array(), $form_state);
+    $redirect_path = 'user/agency/' . _hr_access_get_agency_node($agency->uid) . '/applicants';
+
+    if (count($arg) > 2) {
+      $arg_last_items = array_slice($arg, 2);
+      $redirect_path = implode('/', $arg_last_items);
+    }
+
+    header('Location: ' . url($redirect_path, array('absolute' => TRUE)));
+    drupal_exit();
+  }
+  else {
+    $site_mail = variable_get('site_mail', ini_get('sendmail_from'));
+    $message = t('You do not have access. Please contact') . ' ' . l(t('administrator'), 'mailto:' . $site_mail);
+    drupal_set_message($message, 'error');
+    drupal_access_denied();
+    drupal_exit();
+  }
+}
+
+/**
+ * Implement hook_form_alter().
+ *
+ * @param $form
+ * @param $form_state
+ * @param $form_id
+ */
+function hr_access_form_alter(&$form, $form_state, $form_id) {
+  $arg = arg();
+
+  // Add custom submission handler for adding hash if it's empty
+  if ($form_id == 'user_register_form' || $form_id == 'user_profile_form') {
+    if (isset($form['field_agency_hash'])) {
+      // Find rid of the role 'agency'
+      $rid_agency = user_role_load_by_name(HR_AGENCY_ROLE)->rid;
+
+      $form['field_agency_hash']['#states'] = array(
+        'visible' => array(
+          'input[name="roles[' . $rid_agency . ']"]' => array('checked' => TRUE)
+        ),
+      );
+      $form['field_agency_hash']['#disabled'] = TRUE;
+
+      if ($form_id == 'user_register_form') {
+        if (isset($arg[3]) && $arg[3] == HR_AGENCY_ROLE && isset($form['account']['roles'])) {
+          $form['account']['roles']['#default_value'] = array($rid_agency);
+          $form['account']['roles']['#disabled'] = TRUE;
+        }
+        // If user has a role 'agency' add additional fields
+        $form['user_agency'] = array(
+          '#type' => 'fieldset', 
+          '#title' => t('Agency settings'), 
+          '#weight' => 100,
+          '#states' => array(
+            'visible' => array(
+              'input[name="roles[' . $rid_agency . ']"]' => array('checked' => TRUE),
+            ),
+          ),
+        );
+        $form['user_agency']['user_agency_title'] = array(
+          '#type' => 'textfield',
+          '#title' => t("Title of the agency"),
+          '#size' => 60, 
+          '#maxlength' => 255,
+        );
+
+        // Gets list of the avaliable towns
+        $towns_vid = taxonomy_vocabulary_machine_name_load('towns');
+        if (isset($towns_vid->vid)) {
+          $towns_terms = taxonomy_get_tree($towns_vid->vid, 0, 1);
+          
+          $towns_options = array();
+          if (isset($towns_terms) && !empty($towns_terms)) {
+            foreach ($towns_terms as $term) {
+              $towns_options[$term->tid] = $term->name;
+            }
+          }
+
+          if ($towns_options) {
+            $form['user_agency']['user_agency_towns'] = array(
+              '#type' => 'checkboxes',
+              '#title' => t("Towns"),
+              '#options' => $towns_options,
+            );
+          }
+        }
+
+        $form['#validate'][] = 'hr_access_form_user_profile_register_form_validate';
+        // Add custom submission handler for creating content-type 'agency' when user with role 'agency' was created
+        $form['#submit'][] = 'hr_access_form_user_profile_register_form_submit';
+      }
+      
+      // Add custom submission handler for adding hash if it's empty
+      $form['#submit'][] = 'hr_access_form_user_profile_form_submit';
+    }
+  }
+}
+
+/**
+ * Validate callback for user with role 'agency'.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function hr_access_form_user_profile_register_form_validate($form, &$form_state) {
+  // Find rid of the role 'agency'
+  $rid_agency = user_role_load_by_name(HR_AGENCY_ROLE)->rid;
+
+  if (isset($form_state['values']['roles']) && is_array($form_state['values']['roles']) && in_array($rid_agency, $form_state['values']['roles'])) {
+    // Field 'Title' is required for agency
+    if (!isset($form_state['values']['user_agency_title']) || !$form_state['values']['user_agency_title']) {
+      form_set_error('user_agency_title', t('Title of the agency field is required.'));
+    }
+    // Field 'Towns' is required for agency
+    if(!isset($form_state['values']['user_agency_towns']) || empty($form_state['values']['user_agency_towns']) || !array_filter($form_state['values']['user_agency_towns'])) {
+      form_set_error('user_agency_towns', t('Towns field is required.'));
+    }
+  }
+}
+
+/**
+ * Submit callback to create content-type 'agency' for user with role 'agency'.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function hr_access_form_user_profile_register_form_submit($form, &$form_state) {
+  global $user;
+
+  $account = $form_state['user'];
+  // Find rid of the role 'agency'
+  $rid_agency = user_role_load_by_name(HR_AGENCY_ROLE)->rid;
+
+  if (array_key_exists($rid_agency, $account->roles)) {
+    $form_state['redirect'] = 'admin/surveys/agencies';
+    // Create content-type 'agency' when user with role 'agency' was created
+    $lang_default = language_default();
+    $lang = (isset($lang_default->language)) ? $lang_default->language : LANGUAGE_NONE;
+    
+    $node = new stdClass();
+    $node->title = $form_state['values']['user_agency_title'];
+    $node->type = 'agency';
+    node_object_prepare($node); // Sets some defaults. Invokes hook_prepare() and hook_node_prepare().
+    $node->language = $lang;
+    $node->uid = $user->uid; 
+    $node->status = 1; // Published
+    $node->promote = 0; // Not promoted to front page
+    $node->comment = 0; // Comments disabled
+
+    // Entity reference fields
+    // Add towns to node. Multiple field
+    foreach ($form_state['values']['user_agency_towns'] as $tkey => $tvalue) {
+      if ($tvalue) {
+        $node->field_agency_town[$lang][] = array(
+          'target_id' => $tvalue,
+          'target_type' => 'taxonomy_term',
+        );
+      }
+    }
+    // Add contact to node
+    $node->field_agency_contact[$lang][] = array(
+      'target_id' => $account->uid,
+      'target_type' => 'user',
+    );
+    
+    $node = node_submit($node); // Prepare node for saving
+    node_save($node);
+    $message = t('@title been added.', array(
+      '@title' => $node->title,
+    ));
+    drupal_set_message($message);
+  }
+}
+
+/**
+ * Submit callback to add hash to an user with role 'agency'.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function hr_access_form_user_profile_form_submit($form, &$form_state) {
+  $account = $form_state['user'];
+  // Find rid of the role 'agency'
+  $rid_agency = user_role_load_by_name(HR_AGENCY_ROLE)->rid;
+
+  if (array_key_exists($rid_agency, $account->roles)) {
+    // Add hash to user with role 'agency'
+    $hash = field_get_items('user', $account, 'field_agency_hash');
+    if (!isset($hash[0]['value']) || empty($hash[0]['value'])) {
+      $wrapper = entity_metadata_wrapper('user', $account);
+      $hash = _hr_access_build_agency_hash($account->mail, $account->uid);
+      $wrapper->field_agency_hash->set($hash);
+      $wrapper->save();
+
+      $message = t('Hash has been added to the user @name (@mail).', array(
+        '@name' => $account->name,
+        '@mail' => $account->mail,
+      ));
+      drupal_set_message($message);
+    }
+  }
+}
+
+/**
+ * Generate the hash key used for agency link.
+ */
+function _hr_access_build_agency_hash($mail, $uid) {
+  $key = variable_get('hr_access_private_key', FALSE);
+
+  if ($key) {
+    return drupal_substr(md5($mail . $key), 0, 20) . $uid;
+  }
+  
+  return FALSE;
+}
+
+/**
+ * Helper function
+ * Load an agency user using the hash.
+ *
+ * @param $hash
+ * @return bool|object
+ *  user object or FALSE if the hash is invalid or the user does not exist.
+ */
+function _hr_access_agency_user_load_by_hash($hash) {
+  // Attempt to detect invalid format.
+  if (!preg_match('/.{10}[0-9]+/', $hash)) {
+    return FALSE;
+  }
+
+  $md5 = drupal_substr($hash, 0, 20);
+  $uid = drupal_substr($hash, 20);
+
+  if (is_numeric($uid)) {
+    $agency = user_load($uid);
+    if (!isset($agency->mail)) {
+      return FALSE;
+    }
+  }
+  else {
+    return FALSE;
+  }
+
+  $key = variable_get('hr_access_private_key', FALSE);
+  if (!$key) {
+    return FALSE;
+  }
+
+  // Check the hash if the comparison fails, return a not found error.
+  if ($md5 != drupal_substr(md5($agency->mail . $key), 0, 20)) {
+    return FALSE;
+  }
+
+  return $agency;
+}
+
+/**
+ * Helper function
+ * Add node referenced to user with role 'agency'.
+ *
+ * @param $uid
+ * @return integer
+ */
+function _hr_access_get_agency_node($uid) {
+  $agency_nid = 0;
+
+  // Get node by contact uid (reference field)
+  $query = new EntityFieldQuery();
+  $entities = $query->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', 'agency')
+    ->propertyCondition('status', 1)
+    ->fieldCondition('field_agency_contact', 'target_id', $uid, '=')
+    ->execute();
+
+  if (isset($entities['node']) && !empty($entities['node'])) {
+    $agency_node = array_shift($entities['node']);
+    if (isset($agency_node->nid)) {
+      $agency_nid = $agency_node->nid;
+    }
+  }
+
+  return $agency_nid;
+}

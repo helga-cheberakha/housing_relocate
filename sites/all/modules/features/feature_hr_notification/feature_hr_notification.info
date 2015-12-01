@@ -1,0 +1,9 @@
+name = Feature HR Notification
+core = 7.x
+package = Features HR
+version = 7.x-1.0
+dependencies[] = entity
+dependencies[] = entityform
+dependencies[] = rules
+features[features_api][] = api:2
+features[rules_config][] = rules_hr_notification_email_admin
