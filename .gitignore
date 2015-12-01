@@ -1,0 +1,17 @@
+# Ignore configuration files that may contain sensitive information.
+sites/*/*settings.php
+sites/default/files.tgz
+sites/default/private-files.tgz
+sites/default/files
+
+# Ignore paths that contain generated content.
+sites/*/files
+sites/*/private
+
+# Ignore everything but the "sites" folder ( for non core developer )
+/.settings
+/.buildpath
+/.project
+/.idea
+
+*.DS_Store
