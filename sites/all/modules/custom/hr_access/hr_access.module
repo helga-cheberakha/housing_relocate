@@ -97,10 +97,6 @@ function hr_access_permission() {
       'title' => t('Login via url'),
       'description' => t('Allow user to log in via URL.'),
     ),
-    'view own applicants' => array(
-      'title' => t('View own applicants'),
-      'description' => t('Allow user view own applicants (for agency).'),
-    ),
   );
 }
 
@@ -429,6 +425,16 @@ function hr_access_form_user_profile_form_submit($form, &$form_state) {
       drupal_set_message($message);
     }
   }
+}
+
+/**
+ * Implements hook_views_api().
+ */
+function hr_access_views_api() {
+  return array(
+    'api' => '3.0',
+    'path' => drupal_get_path('module', 'hr_access'),
+  );
 }
 
 /**

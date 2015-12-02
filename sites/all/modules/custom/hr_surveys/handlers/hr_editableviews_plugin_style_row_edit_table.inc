@@ -1,9 +1,12 @@
 <?php
+/**
+ * @file
+ * Definition of hr_editableviews_plugin_style_row_edit_table.
+ */
 
 /**
- * Class hr_editableviews_plugin_style_row_edit_table.
- *
  * Plugin class for the RH Editable Table style.
+ *
  * Override editableviews_plugin_style_row_edit_table class.
  */
 class hr_editableviews_plugin_style_row_edit_table extends editableviews_plugin_style_row_edit_table {
