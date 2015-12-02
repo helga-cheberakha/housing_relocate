@@ -62,7 +62,7 @@ function hr_access_entityform_access_alter(&$access, $op, $context) {
   $entityform = $context['entityform'];
 
   // Allow agency see only submission which has this agency as 'field_applicant_agencies'
-  if (in_array(HR_AGENCY_ROLE, $user->roles)) {
+  if (in_array(HR_AGENCY_ROLE, $user->roles) && $op == 'view') {
     $access = FALSE;
     $contacts = array();
 
@@ -84,6 +84,31 @@ function hr_access_entityform_access_alter(&$access, $op, $context) {
 
     if (in_array($user->uid, $contacts)) {
       $access = TRUE;
+    }
+  }
+}
+
+/**
+ * Implements hook_views_query_alter().
+ *
+ * Control access to Entityforms in Views.
+ * This will only work if entityform is the base table of the View
+ */
+function hr_access_views_query_alter(&$view, &$query) {
+  global $user;
+
+  if (!empty($view->query->tags) && in_array('user_access', $view->query->tags) && $view->base_table == 'entityform' && !user_access('view any entityform')) {
+    // Override access for 'Agency'
+    if (in_array(HR_AGENCY_ROLE, $user->roles) && isset($query->where) && !empty($query->where)) {
+      foreach ($query->where as $key => $value) {
+        if (isset($value['conditions']) && !empty($value['conditions'])) {
+          foreach ($value['conditions'] as $ckey => $cvalue) {
+            if (isset($cvalue['field']) && $cvalue['field'] == 'entityform.uid' && isset($cvalue['value']) && $cvalue['value'] == -1) {
+              unset($query->where[$key]);
+            }
+          }
+        }
+      }
     }
   }
 }
@@ -225,7 +250,7 @@ function hr_access_agency_login($hash = NULL) {
   if ($login) {
     $form_state['uid'] = $agency->uid;
     user_login_submit(array(), $form_state);
-    $redirect_path = 'agency/' . $agency->uid . '/applicants';
+    $redirect_path = 'agency/applicants';
 
     if (count($arg) > 2) {
       $arg_last_items = array_slice($arg, 2);
@@ -425,16 +450,6 @@ function hr_access_form_user_profile_form_submit($form, &$form_state) {
       drupal_set_message($message);
     }
   }
-}
-
-/**
- * Implements hook_views_api().
- */
-function hr_access_views_api() {
-  return array(
-    'api' => '3.0',
-    'path' => drupal_get_path('module', 'hr_access'),
-  );
 }
 
 /**

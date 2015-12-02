@@ -60,7 +60,7 @@ function hr_surveys_user_agency_block() {
   if (user_is_logged_in() && isset($user->roles) && in_array(HR_AGENCY_ROLE, $user->roles)) {
     $links[] = array(
       'title' => t('Online surveys'),
-      'href' => 'agency/' . $user->uid . '/applicants',
+      'href' => 'agency/applicants',
       'attributes' => array('class' => array('navbar-brand')),
     );
   }

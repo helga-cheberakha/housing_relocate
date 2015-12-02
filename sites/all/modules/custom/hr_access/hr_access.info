@@ -4,6 +4,3 @@ core = 7.x
 version = 7.x-1.0
 package = HR
 project = hr_access
-
-; Handlers
-files[] = handlers/hr_access_views_plugin_access_survey_submissions.inc
