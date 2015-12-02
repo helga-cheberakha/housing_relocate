@@ -369,7 +369,7 @@ function feature_hr_surveys_field_group_info() {
         'desc' => '',
         'first_column' => '',
         'second_column' => '',
-        'empty_label_behavior' => '1',
+        'empty_label_behavior' => '2',
         'table_row_striping' => 0,
         'always_show_field_label' => 0,
         'classes' => 'group-table field-group-table',

@@ -374,7 +374,6 @@ function feature_hr_access_user_default_permissions() {
     'name' => 'view any entityform',
     'roles' => array(
       'administrator' => 'administrator',
-      'agency' => 'agency',
       'super administrator' => 'super administrator',
     ),
     'module' => 'entityform',

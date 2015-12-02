@@ -19,16 +19,14 @@ function feature_hr_access_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'module' => 'text',
         'settings' => array(),
-        'type' => 'text_default',
+        'type' => 'hidden',
         'weight' => 2,
       ),
       'full' => array(
         'label' => 'above',
-        'module' => 'text',
         'settings' => array(),
-        'type' => 'text_default',
+        'type' => 'hidden',
         'weight' => 2,
       ),
       'token' => array(
@@ -65,24 +63,39 @@ function feature_hr_access_field_default_field_instances() {
     'description' => '',
     'display' => array(
       'default' => array(
-        'label' => 'above',
-        'module' => 'text',
-        'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 1,
+        'label' => 'hidden',
+        'module' => 'views_field_formatter',
+        'settings' => array(
+          'views_field_formatter' => array(
+            'multiple' => 0,
+            'view' => 'account_display::block_main',
+          ),
+        ),
+        'type' => 'views_field_formatter',
+        'weight' => 0,
       ),
       'full' => array(
-        'label' => 'above',
-        'module' => 'text',
-        'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 1,
+        'label' => 'hidden',
+        'module' => 'views_field_formatter',
+        'settings' => array(
+          'views_field_formatter' => array(
+            'multiple' => 0,
+            'view' => 'account_display::block_main',
+          ),
+        ),
+        'type' => 'views_field_formatter',
+        'weight' => 0,
       ),
       'token' => array(
         'label' => 'hidden',
-        'module' => 'text',
-        'settings' => array(),
-        'type' => 'text_default',
+        'module' => 'views_field_formatter',
+        'settings' => array(
+          'views_field_formatter' => array(
+            'multiple' => 0,
+            'view' => 'account_display::block_name_email',
+          ),
+        ),
+        'type' => 'views_field_formatter',
         'weight' => 0,
       ),
     ),

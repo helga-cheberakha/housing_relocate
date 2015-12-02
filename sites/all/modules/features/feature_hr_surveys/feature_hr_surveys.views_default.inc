@@ -372,13 +372,8 @@ function feature_hr_surveys_views_default_views() {
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['exposed_form']['type'] = 'basic';
-  $handler->display->display_options['exposed_form']['options']['reset_button_label'] = 'Zurücksetzen';
   $handler->display->display_options['pager']['type'] = 'full';
   $handler->display->display_options['pager']['options']['items_per_page'] = '20';
-  $handler->display->display_options['pager']['options']['tags']['first'] = '« erste Seite';
-  $handler->display->display_options['pager']['options']['tags']['previous'] = '‹ vorherige Seite';
-  $handler->display->display_options['pager']['options']['tags']['next'] = 'nächste Seite ›';
-  $handler->display->display_options['pager']['options']['tags']['last'] = 'letzte Seite »';
   $handler->display->display_options['style_plugin'] = 'hr_editableviews_table';
   $handler->display->display_options['style_options']['columns'] = array(
     'entityform_id' => 'entityform_id',
@@ -454,17 +449,17 @@ function feature_hr_surveys_views_default_views() {
   $handler->display->display_options['empty']['area']['empty'] = TRUE;
   $handler->display->display_options['empty']['area']['content'] = 'There are not any applicants.';
   $handler->display->display_options['empty']['area']['format'] = 'full_html';
-  /* Relationship: Entityform Submission: Benutzer uid */
+  /* Relationship: Entityform Submission: User uid */
   $handler->display->display_options['relationships']['user']['id'] = 'user';
   $handler->display->display_options['relationships']['user']['table'] = 'entityform';
   $handler->display->display_options['relationships']['user']['field'] = 'user';
   $handler->display->display_options['relationships']['user']['required'] = TRUE;
-  /* Feld: Entityform Submission: Entityform submission ID */
+  /* Field: Entityform Submission: Entityform submission ID */
   $handler->display->display_options['fields']['entityform_id']['id'] = 'entityform_id';
   $handler->display->display_options['fields']['entityform_id']['table'] = 'entityform';
   $handler->display->display_options['fields']['entityform_id']['field'] = 'entityform_id';
   $handler->display->display_options['fields']['entityform_id']['exclude'] = TRUE;
-  /* Feld: Benutzer: Full name */
+  /* Field: User: Full name */
   $handler->display->display_options['fields']['field_user_full_name']['id'] = 'field_user_full_name';
   $handler->display->display_options['fields']['field_user_full_name']['table'] = 'field_data_field_user_full_name';
   $handler->display->display_options['fields']['field_user_full_name']['field'] = 'field_user_full_name';
@@ -472,7 +467,7 @@ function feature_hr_surveys_views_default_views() {
   $handler->display->display_options['fields']['field_user_full_name']['label'] = 'Name';
   $handler->display->display_options['fields']['field_user_full_name']['element_type'] = 'span';
   $handler->display->display_options['fields']['field_user_full_name']['element_class'] = 'views-field-holder';
-  /* Feld: Entityform Submission: In Frage kommende Bezirke: */
+  /* Field: Entityform Submission: In Frage kommende Bezirke: */
   $handler->display->display_options['fields']['field_habitation_town']['id'] = 'field_habitation_town';
   $handler->display->display_options['fields']['field_habitation_town']['table'] = 'field_data_field_habitation_town';
   $handler->display->display_options['fields']['field_habitation_town']['field'] = 'field_habitation_town';
@@ -481,7 +476,7 @@ function feature_hr_surveys_views_default_views() {
   $handler->display->display_options['fields']['field_habitation_town']['settings'] = array(
     'link' => 0,
   );
-  /* Feld: Entityform Submission: Agencies (editable) */
+  /* Field: Entityform Submission: Agencies (editable) */
   $handler->display->display_options['fields']['field_applicant_agencies_editable']['id'] = 'field_applicant_agencies_editable';
   $handler->display->display_options['fields']['field_applicant_agencies_editable']['table'] = 'field_data_field_applicant_agencies';
   $handler->display->display_options['fields']['field_applicant_agencies_editable']['field'] = 'field_applicant_agencies_editable';
@@ -494,7 +489,7 @@ function feature_hr_surveys_views_default_views() {
   $handler->display->display_options['fields']['field_applicant_agencies_editable']['widget_type'] = 'options_buttons';
   $handler->display->display_options['fields']['field_applicant_agencies_editable']['suppress_label'] = 1;
   $handler->display->display_options['fields']['field_applicant_agencies_editable']['suppress_description'] = 1;
-  /* Feld: Entityform Submission: Mietbeginn: */
+  /* Field: Entityform Submission: Mietbeginn: */
   $handler->display->display_options['fields']['field_habitation_checkin']['id'] = 'field_habitation_checkin';
   $handler->display->display_options['fields']['field_habitation_checkin']['table'] = 'field_data_field_habitation_checkin';
   $handler->display->display_options['fields']['field_habitation_checkin']['field'] = 'field_habitation_checkin';
@@ -509,7 +504,7 @@ function feature_hr_surveys_views_default_views() {
     'multiple_to' => '',
     'show_remaining_days' => 0,
   );
-  /* Feld: Entityform Submission: Max. Pauschalmiete: */
+  /* Field: Entityform Submission: Max. Pauschalmiete: */
   $handler->display->display_options['fields']['field_habitation_maxprice']['id'] = 'field_habitation_maxprice';
   $handler->display->display_options['fields']['field_habitation_maxprice']['table'] = 'field_data_field_habitation_maxprice';
   $handler->display->display_options['fields']['field_habitation_maxprice']['field'] = 'field_habitation_maxprice';
@@ -519,7 +514,7 @@ function feature_hr_surveys_views_default_views() {
     'thousand_separator' => '',
     'prefix_suffix' => 1,
   );
-  /* Feld: Entityform Submission: Status (editable) */
+  /* Field: Entityform Submission: Status (editable) */
   $handler->display->display_options['fields']['field_survey_status_editable']['id'] = 'field_survey_status_editable';
   $handler->display->display_options['fields']['field_survey_status_editable']['table'] = 'field_data_field_survey_status';
   $handler->display->display_options['fields']['field_survey_status_editable']['field'] = 'field_survey_status_editable';
@@ -527,7 +522,7 @@ function feature_hr_surveys_views_default_views() {
   $handler->display->display_options['fields']['field_survey_status_editable']['widget_type'] = 'options_select';
   $handler->display->display_options['fields']['field_survey_status_editable']['suppress_label'] = 1;
   $handler->display->display_options['fields']['field_survey_status_editable']['suppress_description'] = 1;
-  /* Feld: Entityform Submission: Edit Link */
+  /* Field: Entityform Submission: Edit Link */
   $handler->display->display_options['fields']['edit_entityform']['id'] = 'edit_entityform';
   $handler->display->display_options['fields']['edit_entityform']['table'] = 'entityform';
   $handler->display->display_options['fields']['edit_entityform']['field'] = 'edit_entityform';
@@ -537,7 +532,7 @@ function feature_hr_surveys_views_default_views() {
   $handler->display->display_options['fields']['edit_entityform']['element_class'] = 'views-field-small';
   $handler->display->display_options['fields']['edit_entityform']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['edit_entityform']['text'] = 'Edit';
-  /* Feld: Entityform Submission: Link */
+  /* Field: Entityform Submission: Link */
   $handler->display->display_options['fields']['link_entityform']['id'] = 'link_entityform';
   $handler->display->display_options['fields']['link_entityform']['table'] = 'entityform';
   $handler->display->display_options['fields']['link_entityform']['field'] = 'link_entityform';
@@ -545,7 +540,7 @@ function feature_hr_surveys_views_default_views() {
   $handler->display->display_options['fields']['link_entityform']['exclude'] = TRUE;
   $handler->display->display_options['fields']['link_entityform']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['link_entityform']['text'] = 'View';
-  /* Feld: Global: Custom text */
+  /* Field: Global: Custom text */
   $handler->display->display_options['fields']['nothing']['id'] = 'nothing';
   $handler->display->display_options['fields']['nothing']['table'] = 'views';
   $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
@@ -563,12 +558,12 @@ function feature_hr_surveys_views_default_views() {
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page');
   $handler->display->display_options['defaults']['fields'] = FALSE;
-  /* Feld: Entityform Submission: Entityform submission ID */
+  /* Field: Entityform Submission: Entityform submission ID */
   $handler->display->display_options['fields']['entityform_id']['id'] = 'entityform_id';
   $handler->display->display_options['fields']['entityform_id']['table'] = 'entityform';
   $handler->display->display_options['fields']['entityform_id']['field'] = 'entityform_id';
   $handler->display->display_options['fields']['entityform_id']['exclude'] = TRUE;
-  /* Feld: Benutzer: Uid */
+  /* Field: User: Uid */
   $handler->display->display_options['fields']['uid']['id'] = 'uid';
   $handler->display->display_options['fields']['uid']['table'] = 'users';
   $handler->display->display_options['fields']['uid']['field'] = 'uid';
@@ -577,7 +572,7 @@ function feature_hr_surveys_views_default_views() {
   $handler->display->display_options['fields']['uid']['exclude'] = TRUE;
   $handler->display->display_options['fields']['uid']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['uid']['link_to_user'] = FALSE;
-  /* Feld: Benutzer: Full name */
+  /* Field: User: Full name */
   $handler->display->display_options['fields']['field_user_full_name']['id'] = 'field_user_full_name';
   $handler->display->display_options['fields']['field_user_full_name']['table'] = 'field_data_field_user_full_name';
   $handler->display->display_options['fields']['field_user_full_name']['field'] = 'field_user_full_name';
@@ -585,7 +580,7 @@ function feature_hr_surveys_views_default_views() {
   $handler->display->display_options['fields']['field_user_full_name']['label'] = 'Name';
   $handler->display->display_options['fields']['field_user_full_name']['element_type'] = 'span';
   $handler->display->display_options['fields']['field_user_full_name']['element_class'] = 'views-field-holder';
-  /* Feld: Entityform Submission: In Frage kommende Bezirke: */
+  /* Field: Entityform Submission: In Frage kommende Bezirke: */
   $handler->display->display_options['fields']['field_habitation_town']['id'] = 'field_habitation_town';
   $handler->display->display_options['fields']['field_habitation_town']['table'] = 'field_data_field_habitation_town';
   $handler->display->display_options['fields']['field_habitation_town']['field'] = 'field_habitation_town';
@@ -594,7 +589,7 @@ function feature_hr_surveys_views_default_views() {
   $handler->display->display_options['fields']['field_habitation_town']['settings'] = array(
     'link' => 0,
   );
-  /* Feld: Entityform Submission: Agencies (editable) */
+  /* Field: Entityform Submission: Agencies (editable) */
   $handler->display->display_options['fields']['field_applicant_agencies_editable']['id'] = 'field_applicant_agencies_editable';
   $handler->display->display_options['fields']['field_applicant_agencies_editable']['table'] = 'field_data_field_applicant_agencies';
   $handler->display->display_options['fields']['field_applicant_agencies_editable']['field'] = 'field_applicant_agencies_editable';
@@ -607,7 +602,7 @@ function feature_hr_surveys_views_default_views() {
   $handler->display->display_options['fields']['field_applicant_agencies_editable']['widget_type'] = 'options_buttons';
   $handler->display->display_options['fields']['field_applicant_agencies_editable']['suppress_label'] = 1;
   $handler->display->display_options['fields']['field_applicant_agencies_editable']['suppress_description'] = 1;
-  /* Feld: Entityform Submission: Mietbeginn: */
+  /* Field: Entityform Submission: Mietbeginn: */
   $handler->display->display_options['fields']['field_habitation_checkin']['id'] = 'field_habitation_checkin';
   $handler->display->display_options['fields']['field_habitation_checkin']['table'] = 'field_data_field_habitation_checkin';
   $handler->display->display_options['fields']['field_habitation_checkin']['field'] = 'field_habitation_checkin';
@@ -622,7 +617,7 @@ function feature_hr_surveys_views_default_views() {
     'multiple_to' => '',
     'show_remaining_days' => 0,
   );
-  /* Feld: Entityform Submission: Max. Pauschalmiete: */
+  /* Field: Entityform Submission: Max. Pauschalmiete: */
   $handler->display->display_options['fields']['field_habitation_maxprice']['id'] = 'field_habitation_maxprice';
   $handler->display->display_options['fields']['field_habitation_maxprice']['table'] = 'field_data_field_habitation_maxprice';
   $handler->display->display_options['fields']['field_habitation_maxprice']['field'] = 'field_habitation_maxprice';
@@ -632,7 +627,7 @@ function feature_hr_surveys_views_default_views() {
     'thousand_separator' => '',
     'prefix_suffix' => 1,
   );
-  /* Feld: Entityform Submission: Status (editable) */
+  /* Field: Entityform Submission: Status (editable) */
   $handler->display->display_options['fields']['field_survey_status_editable']['id'] = 'field_survey_status_editable';
   $handler->display->display_options['fields']['field_survey_status_editable']['table'] = 'field_data_field_survey_status';
   $handler->display->display_options['fields']['field_survey_status_editable']['field'] = 'field_survey_status_editable';
@@ -640,7 +635,7 @@ function feature_hr_surveys_views_default_views() {
   $handler->display->display_options['fields']['field_survey_status_editable']['widget_type'] = 'options_select';
   $handler->display->display_options['fields']['field_survey_status_editable']['suppress_label'] = 1;
   $handler->display->display_options['fields']['field_survey_status_editable']['suppress_description'] = 1;
-  /* Feld: Entityform Submission: Edit Link */
+  /* Field: Entityform Submission: Edit Link */
   $handler->display->display_options['fields']['edit_entityform']['id'] = 'edit_entityform';
   $handler->display->display_options['fields']['edit_entityform']['table'] = 'entityform';
   $handler->display->display_options['fields']['edit_entityform']['field'] = 'edit_entityform';
@@ -650,7 +645,7 @@ function feature_hr_surveys_views_default_views() {
   $handler->display->display_options['fields']['edit_entityform']['element_class'] = 'views-field-small';
   $handler->display->display_options['fields']['edit_entityform']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['edit_entityform']['text'] = 'Edit';
-  /* Feld: Entityform Submission: Link */
+  /* Field: Entityform Submission: Link */
   $handler->display->display_options['fields']['link_entityform']['id'] = 'link_entityform';
   $handler->display->display_options['fields']['link_entityform']['table'] = 'entityform';
   $handler->display->display_options['fields']['link_entityform']['field'] = 'link_entityform';
@@ -658,7 +653,7 @@ function feature_hr_surveys_views_default_views() {
   $handler->display->display_options['fields']['link_entityform']['exclude'] = TRUE;
   $handler->display->display_options['fields']['link_entityform']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['link_entityform']['text'] = 'View';
-  /* Feld: Notify the agency */
+  /* Field: Notify the agency */
   $handler->display->display_options['fields']['nothing_1']['id'] = 'nothing_1';
   $handler->display->display_options['fields']['nothing_1']['table'] = 'views';
   $handler->display->display_options['fields']['nothing_1']['field'] = 'nothing';
@@ -669,7 +664,7 @@ function feature_hr_surveys_views_default_views() {
   $handler->display->display_options['fields']['nothing_1']['alter']['make_link'] = TRUE;
   $handler->display->display_options['fields']['nothing_1']['alter']['path'] = 'survey/[entityform_id]/applicant/[uid]/agency/notify';
   $handler->display->display_options['fields']['nothing_1']['element_label_colon'] = FALSE;
-  /* Feld: Show notify the agency */
+  /* Field: Show notify the agency */
   $handler->display->display_options['fields']['field_applicant_agencies']['id'] = 'field_applicant_agencies';
   $handler->display->display_options['fields']['field_applicant_agencies']['table'] = 'field_data_field_applicant_agencies';
   $handler->display->display_options['fields']['field_applicant_agencies']['field'] = 'field_applicant_agencies';
@@ -687,7 +682,7 @@ function feature_hr_surveys_views_default_views() {
   );
   $handler->display->display_options['fields']['field_applicant_agencies']['delta_limit'] = '1';
   $handler->display->display_options['fields']['field_applicant_agencies']['delta_offset'] = '0';
-  /* Feld: Global: Custom text */
+  /* Field: Global: Custom text */
   $handler->display->display_options['fields']['nothing']['id'] = 'nothing';
   $handler->display->display_options['fields']['nothing']['table'] = 'views';
   $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
@@ -716,12 +711,8 @@ function feature_hr_surveys_views_default_views() {
     4 => '4',
     6 => '6',
   );
-  $handler->display->display_options['defaults']['query'] = FALSE;
-  $handler->display->display_options['query']['type'] = 'views_query';
-  $handler->display->display_options['query']['options']['distinct'] = TRUE;
-  $handler->display->display_options['query']['options']['pure_distinct'] = TRUE;
   $handler->display->display_options['defaults']['relationships'] = FALSE;
-  /* Relationship: Entityform Submission: Benutzer uid */
+  /* Relationship: Entityform Submission: User uid */
   $handler->display->display_options['relationships']['user']['id'] = 'user';
   $handler->display->display_options['relationships']['user']['table'] = 'entityform';
   $handler->display->display_options['relationships']['user']['field'] = 'user';
@@ -730,18 +721,20 @@ function feature_hr_surveys_views_default_views() {
   $handler->display->display_options['relationships']['field_applicant_agencies_target_id']['id'] = 'field_applicant_agencies_target_id';
   $handler->display->display_options['relationships']['field_applicant_agencies_target_id']['table'] = 'field_data_field_applicant_agencies';
   $handler->display->display_options['relationships']['field_applicant_agencies_target_id']['field'] = 'field_applicant_agencies_target_id';
+  $handler->display->display_options['relationships']['field_applicant_agencies_target_id']['label'] = 'Inhalt entity referenced from field_applicant_agencies';
   /* Relationship: Entity Reference: Referenced Entity */
   $handler->display->display_options['relationships']['field_agency_contact_target_id']['id'] = 'field_agency_contact_target_id';
   $handler->display->display_options['relationships']['field_agency_contact_target_id']['table'] = 'field_data_field_agency_contact';
   $handler->display->display_options['relationships']['field_agency_contact_target_id']['field'] = 'field_agency_contact_target_id';
   $handler->display->display_options['relationships']['field_agency_contact_target_id']['relationship'] = 'field_applicant_agencies_target_id';
+  $handler->display->display_options['relationships']['field_agency_contact_target_id']['label'] = 'Benutzer entity referenced from field_agency_contact';
   $handler->display->display_options['defaults']['fields'] = FALSE;
-  /* Feld: Entityform Submission: Entityform submission ID */
+  /* Field: Entityform Submission: Entityform submission ID */
   $handler->display->display_options['fields']['entityform_id']['id'] = 'entityform_id';
   $handler->display->display_options['fields']['entityform_id']['table'] = 'entityform';
   $handler->display->display_options['fields']['entityform_id']['field'] = 'entityform_id';
   $handler->display->display_options['fields']['entityform_id']['exclude'] = TRUE;
-  /* Feld: Benutzer: Full name */
+  /* Field: User: Full name */
   $handler->display->display_options['fields']['field_user_full_name']['id'] = 'field_user_full_name';
   $handler->display->display_options['fields']['field_user_full_name']['table'] = 'field_data_field_user_full_name';
   $handler->display->display_options['fields']['field_user_full_name']['field'] = 'field_user_full_name';
@@ -749,7 +742,7 @@ function feature_hr_surveys_views_default_views() {
   $handler->display->display_options['fields']['field_user_full_name']['label'] = 'Name';
   $handler->display->display_options['fields']['field_user_full_name']['element_type'] = 'span';
   $handler->display->display_options['fields']['field_user_full_name']['element_class'] = 'views-field-holder';
-  /* Feld: Entityform Submission: In Frage kommende Bezirke: */
+  /* Field: Entityform Submission: In Frage kommende Bezirke: */
   $handler->display->display_options['fields']['field_habitation_town']['id'] = 'field_habitation_town';
   $handler->display->display_options['fields']['field_habitation_town']['table'] = 'field_data_field_habitation_town';
   $handler->display->display_options['fields']['field_habitation_town']['field'] = 'field_habitation_town';
@@ -758,7 +751,7 @@ function feature_hr_surveys_views_default_views() {
   $handler->display->display_options['fields']['field_habitation_town']['settings'] = array(
     'link' => 0,
   );
-  /* Feld: Entityform Submission: Mietbeginn: */
+  /* Field: Entityform Submission: Mietbeginn: */
   $handler->display->display_options['fields']['field_habitation_checkin']['id'] = 'field_habitation_checkin';
   $handler->display->display_options['fields']['field_habitation_checkin']['table'] = 'field_data_field_habitation_checkin';
   $handler->display->display_options['fields']['field_habitation_checkin']['field'] = 'field_habitation_checkin';
@@ -773,7 +766,7 @@ function feature_hr_surveys_views_default_views() {
     'multiple_to' => '',
     'show_remaining_days' => 0,
   );
-  /* Feld: Entityform Submission: Max. Pauschalmiete: */
+  /* Field: Entityform Submission: Max. Pauschalmiete: */
   $handler->display->display_options['fields']['field_habitation_maxprice']['id'] = 'field_habitation_maxprice';
   $handler->display->display_options['fields']['field_habitation_maxprice']['table'] = 'field_data_field_habitation_maxprice';
   $handler->display->display_options['fields']['field_habitation_maxprice']['field'] = 'field_habitation_maxprice';
@@ -783,11 +776,11 @@ function feature_hr_surveys_views_default_views() {
     'thousand_separator' => '',
     'prefix_suffix' => 1,
   );
-  /* Feld: Entityform Submission: Status */
+  /* Field: Entityform Submission: Status */
   $handler->display->display_options['fields']['field_survey_status']['id'] = 'field_survey_status';
   $handler->display->display_options['fields']['field_survey_status']['table'] = 'field_data_field_survey_status';
   $handler->display->display_options['fields']['field_survey_status']['field'] = 'field_survey_status';
-  /* Feld: Entityform Submission: Link */
+  /* Field: Entityform Submission: Link */
   $handler->display->display_options['fields']['link_entityform']['id'] = 'link_entityform';
   $handler->display->display_options['fields']['link_entityform']['table'] = 'entityform';
   $handler->display->display_options['fields']['link_entityform']['field'] = 'link_entityform';
@@ -795,32 +788,31 @@ function feature_hr_surveys_views_default_views() {
   $handler->display->display_options['fields']['link_entityform']['exclude'] = TRUE;
   $handler->display->display_options['fields']['link_entityform']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['link_entityform']['text'] = 'View';
-  /* Feld: Global: Custom text */
+  /* Field: Global: Custom text */
   $handler->display->display_options['fields']['nothing']['id'] = 'nothing';
   $handler->display->display_options['fields']['nothing']['table'] = 'views';
   $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
   $handler->display->display_options['fields']['nothing']['label'] = 'Operation';
   $handler->display->display_options['fields']['nothing']['alter']['text'] = '&nbsp;&nbsp;[link_entityform]';
-  /* Feld: Benutzer: Uid */
-  $handler->display->display_options['fields']['uid']['id'] = 'uid';
-  $handler->display->display_options['fields']['uid']['table'] = 'users';
-  $handler->display->display_options['fields']['uid']['field'] = 'uid';
-  $handler->display->display_options['fields']['uid']['relationship'] = 'field_agency_contact_target_id';
-  $handler->display->display_options['fields']['uid']['exclude'] = TRUE;
   $handler->display->display_options['defaults']['arguments'] = FALSE;
-  /* Contextual filter: Benutzer: Uid */
+  /* Contextual filter: User: Uid */
   $handler->display->display_options['arguments']['uid']['id'] = 'uid';
   $handler->display->display_options['arguments']['uid']['table'] = 'users';
   $handler->display->display_options['arguments']['uid']['field'] = 'uid';
   $handler->display->display_options['arguments']['uid']['relationship'] = 'field_agency_contact_target_id';
   $handler->display->display_options['arguments']['uid']['default_action'] = 'default';
   $handler->display->display_options['arguments']['uid']['exception']['title'] = 'Alle';
-  $handler->display->display_options['arguments']['uid']['default_argument_type'] = 'fixed';
-  $handler->display->display_options['arguments']['uid']['default_argument_options']['argument'] = '2';
+  $handler->display->display_options['arguments']['uid']['default_argument_type'] = 'current_user';
   $handler->display->display_options['arguments']['uid']['summary']['number_of_records'] = '0';
   $handler->display->display_options['arguments']['uid']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['uid']['summary_options']['items_per_page'] = '25';
-  $handler->display->display_options['path'] = 'agency/%/applicants';
+  $handler->display->display_options['arguments']['uid']['specify_validation'] = TRUE;
+  $handler->display->display_options['arguments']['uid']['validate']['type'] = 'user';
+  $handler->display->display_options['arguments']['uid']['validate_options']['restrict_roles'] = TRUE;
+  $handler->display->display_options['arguments']['uid']['validate_options']['roles'] = array(
+    4 => '4',
+  );
+  $handler->display->display_options['path'] = 'agency/applicants';
   $handler->display->display_options['menu']['title'] = 'Agency Online surveys';
   $handler->display->display_options['menu']['weight'] = '-10';
   $handler->display->display_options['menu']['name'] = 'devel';
@@ -831,19 +823,19 @@ function feature_hr_surveys_views_default_views() {
     t('Applicants'),
     t('more'),
     t('Apply'),
-    t('Zurücksetzen'),
+    t('Reset'),
     t('Sort by'),
     t('Asc'),
     t('Desc'),
     t('Items per page'),
     t('- All -'),
     t('Offset'),
-    t('« erste Seite'),
-    t('‹ vorherige Seite'),
-    t('nächste Seite ›'),
-    t('letzte Seite »'),
+    t('« first'),
+    t('‹ previous'),
+    t('next ›'),
+    t('last »'),
     t('There are not any applicants.'),
-    t('Benutzer'),
+    t('User'),
     t('Entityform submission ID'),
     t('.'),
     t(','),
@@ -866,10 +858,8 @@ function feature_hr_surveys_views_default_views() {
     t('Inhalt entity referenced from field_applicant_agencies'),
     t('Benutzer entity referenced from field_agency_contact'),
     t('&nbsp;&nbsp;[link_entityform]'),
-    t('Uid'),
     t('Alle'),
   );
-
   $export['online_surveys'] = $view;
 
   return $export;
