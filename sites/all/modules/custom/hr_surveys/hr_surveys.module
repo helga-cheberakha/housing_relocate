@@ -151,9 +151,6 @@ function hr_surveys_entityform_form_create_submit($form, &$form_state) {
         }
       }
     }
-
-    // Send email to admin
-
   }
 }
 
@@ -358,6 +355,19 @@ function theme_hr_surveys_textemail_formatter($variables) {
   }
 
   return $output;
+}
+
+/**
+ * Implements hook_theme_registry_alter().
+ *
+ * @param $theme_registry
+ */
+function hr_surveys_theme_registry_alter(&$theme_registry) {
+  global $base_url;
+
+  if (isset($theme_registry['views_flipped_table'])) {
+    $theme_registry['views_flipped_table']['path'] = drupal_get_path('module', 'hr_surveys') . '/theme';
+  }
 }
 
 /**
