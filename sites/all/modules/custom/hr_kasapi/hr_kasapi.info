@@ -1,0 +1,10 @@
+name = HR KasAPI
+description = Kasserver integration.
+package = Kasserver
+core = 7.x
+
+dependencies[] = libraries (>=2.0)
+
+version = 7.x-1.0
+project = hr_kasapi
+

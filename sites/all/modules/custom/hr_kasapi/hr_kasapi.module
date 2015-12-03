@@ -1,0 +1,26 @@
+<?php
+
+/**
+ * @file
+ * KasApi module.
+ */
+
+/**
+ * Implements hook_libraries_info().
+ */
+function hr_kasapi_libraries_info() {
+  $libraries['kasapi'] = array(
+    'name' => 'KasApi',
+    'path' => 'src/KasApi',
+    'version arguments' => array(
+      'file' => 'composer.json',
+      // Version 2.0.6
+      'pattern' => '/\"version": \"((\d+)\.(\d+)\.(\d+))\",/',
+    ),
+    'files' => array(
+      'php' => array('KasApi.php'),
+    ),
+  );
+
+  return $libraries;
+}

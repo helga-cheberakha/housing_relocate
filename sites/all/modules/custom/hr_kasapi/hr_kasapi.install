@@ -1,0 +1,54 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the hr_kasapi module.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function hr_kasapi_requirements($phase) {
+  $requirements = array();
+  // Ensure translations don't break at install time:
+  $t = get_t();
+
+  if ($phase == 'update') {
+    $path = drupal_get_path('module', 'libraries') . '/libraries.info';
+    $info = drupal_parse_info_file($path);
+    if (version_compare($info['version'], '7.x-2.0', '<')) {
+      $requirements['kasapi'] = array(
+        'title' => $t('KasApi'),
+        'value' => '7.x-2.x',
+        'description' => $t('libraries 2.x is required for KasApi.'),
+        'severity' => REQUIREMENT_ERROR,
+      );
+      return $requirements;
+    }
+  }
+
+  // Report Drupal version:
+  if (in_array($phase, array('runtime', 'update'))) {
+    $library = libraries_detect('kasapi');
+    $requirements['kasapi'] = array(
+      'title' => $t('KasApi'),
+    );
+
+    if ($library['installed']) {
+      $requirements['kasapi'] += array(
+        'value' => $library['version'],
+        'description' => $t('The KasApi wrapper library is installed correctly.'),
+        'severity' => REQUIREMENT_OK,
+      );
+    }
+    else {
+      $requirements['kasapi'] += array(
+        'value' => $library['error'],
+        'description' => $library['error message'],
+        'severity' => REQUIREMENT_ERROR,
+      );
+    }
+  }
+
+  return $requirements;
+}
