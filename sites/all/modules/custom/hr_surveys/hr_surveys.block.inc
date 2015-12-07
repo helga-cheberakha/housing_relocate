@@ -20,13 +20,28 @@ function hr_surveys_user_block() {
     );
   }
   else {
-    $name = $user->name;
+    $name_array = array();
     $account = user_load($user->uid);
 
-    $field_full_name = field_get_items('user', $account, 'field_user_full_name');
-    if (isset($field_full_name[0]['value']) && !empty($field_full_name[0]['value'])) {
-      $name = $field_full_name[0]['value'];
+    // Get full name of the user
+    $field_user_firstname = field_get_items('user', $account, 'field_user_firstname');
+    $field_user_lastname = field_get_items('user', $account, 'field_user_lastname');
+    // Set first user name
+    if (isset($field_user_firstname[0]['value']) && !empty($field_user_firstname[0]['value'])) {
+      $name_array[] = $field_user_firstname[0]['value'];
     }
+    // Set last user name
+    if (isset($field_user_lastname[0]['value']) && !empty($field_user_lastname[0]['value'])) {
+      $name_array[] = $field_user_lastname[0]['value'];
+    }
+
+    if ($name_array) {
+      $name = implode(' ', $name_array);
+    }
+    else {
+      $name = $user->name;
+    }
+
     // Add link to account.
     $links[] = array(
       'title' => t('Hello') . ' <strong>' . $name . '</strong>',
