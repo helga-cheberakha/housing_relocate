@@ -24,7 +24,8 @@ function feature_hr_surveys_field_group_info() {
     'weight' => '0',
     'children' => array(
       0 => 'field_applicant_email',
-      1 => 'field_applicant_name',
+      1 => 'field_applicant_firstname',
+      2 => 'field_applicant_lastname',
     ),
     'format_type' => 'div',
     'format_settings' => array(
@@ -89,7 +90,7 @@ function feature_hr_surveys_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Administration information',
-    'weight' => '4',
+    'weight' => '5',
     'children' => array(
       0 => 'field_applicant_agencies',
       1 => 'field_applicant_email_allinkl',
@@ -128,7 +129,7 @@ function feature_hr_surveys_field_group_info() {
       0 => 'field_agency_contact',
       1 => 'field_agency_town',
     ),
-    'format_type' => 'table',
+    'format_type' => 'hidden',
     'format_settings' => array(
       'label' => 'Main information',
       'instance_settings' => array(
@@ -141,6 +142,7 @@ function feature_hr_surveys_field_group_info() {
         'always_show_field_label' => 0,
         'classes' => 'group-agency-info field-group-table',
       ),
+      'formatter' => '',
     ),
   );
   $export['group_agency_info|node|agency|default'] = $field_group;
@@ -156,7 +158,7 @@ function feature_hr_surveys_field_group_info() {
   $field_group->parent_name = 'group_left_colm';
   $field_group->data = array(
     'label' => 'Anzahl der Erwachsenen und Kinder:',
-    'weight' => '7',
+    'weight' => '11',
     'children' => array(
       0 => 'field_occupants_adults',
       1 => 'field_occupants_kids',
@@ -261,9 +263,9 @@ function feature_hr_surveys_field_group_info() {
     'children' => array(
       0 => 'field_habitation_checkin',
       1 => 'field_habitation_maxprice',
-      2 => 'field_habitation_rent_term',
-      3 => 'field_occupants_adults',
-      4 => 'field_occupants_kids',
+      2 => 'field_occupants_adults',
+      3 => 'field_occupants_kids',
+      4 => 'field_habitation_rent_term',
     ),
     'format_type' => 'table',
     'format_settings' => array(
@@ -327,7 +329,7 @@ function feature_hr_surveys_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Service information',
-    'weight' => '9',
+    'weight' => '7',
     'children' => array(
       0 => 'field_applicant_agencies',
       1 => 'field_applicant_email_allinkl',
@@ -359,7 +361,8 @@ function feature_hr_surveys_field_group_info() {
     'weight' => '0',
     'children' => array(
       0 => 'field_applicant_email',
-      1 => 'field_applicant_name',
+      1 => 'field_applicant_firstname',
+      2 => 'field_applicant_lastname',
     ),
     'format_type' => 'table',
     'format_settings' => array(

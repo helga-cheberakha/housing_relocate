@@ -21,6 +21,8 @@ function feature_hr_surveys_field_default_field_instances() {
         'label' => 'above',
         'module' => 'entityreference',
         'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
           'link' => 1,
         ),
         'type' => 'entityreference_label',
@@ -54,9 +56,12 @@ function feature_hr_surveys_field_default_field_instances() {
       'default' => array(
         'label' => 'above',
         'module' => 'hr_surveys',
-        'settings' => array(),
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+        ),
         'type' => 'hr_surveys_textemail',
-        'weight' => 2,
+        'weight' => 7,
       ),
     ),
     'entity_type' => 'entityform',
@@ -75,7 +80,7 @@ function feature_hr_surveys_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 2,
+      'weight' => 8,
     ),
   );
 
@@ -89,7 +94,10 @@ function feature_hr_surveys_field_default_field_instances() {
       'default' => array(
         'label' => 'above',
         'module' => 'text',
-        'settings' => array(),
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+        ),
         'type' => 'text_default',
         'weight' => 8,
       ),
@@ -114,27 +122,30 @@ function feature_hr_surveys_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'entityform-survey-field_applicant_name'.
-  $field_instances['entityform-survey-field_applicant_name'] = array(
+  // Exported field_instance: 'entityform-survey-field_applicant_firstname'.
+  $field_instances['entityform-survey-field_applicant_firstname'] = array(
     'bundle' => 'survey',
     'default_value' => NULL,
     'deleted' => 0,
     'description' => '',
     'display' => array(
       'default' => array(
-        'label' => 'above',
+        'label' => 'hidden',
         'module' => 'text',
-        'settings' => array(),
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+        ),
         'type' => 'text_default',
-        'weight' => 1,
+        'weight' => 5,
       ),
     ),
     'entity_type' => 'entityform',
-    'field_name' => 'field_applicant_name',
-    'label' => 'Name',
+    'field_name' => 'field_applicant_firstname',
+    'label' => 'First name',
     'required' => 1,
     'settings' => array(
-      'rh_surveys_question' => 1,
+      'hr_surveys_question' => 1,
       'text_processing' => 0,
       'user_register_form' => FALSE,
     ),
@@ -145,7 +156,45 @@ function feature_hr_surveys_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 1,
+      'weight' => 7,
+    ),
+  );
+
+  // Exported field_instance: 'entityform-survey-field_applicant_lastname'.
+  $field_instances['entityform-survey-field_applicant_lastname'] = array(
+    'bundle' => 'survey',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'module' => 'text',
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+        ),
+        'type' => 'text_default',
+        'weight' => 6,
+      ),
+    ),
+    'entity_type' => 'entityform',
+    'field_name' => 'field_applicant_lastname',
+    'label' => 'Last name',
+    'required' => 1,
+    'settings' => array(
+      'hr_surveys_question' => 1,
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 9,
     ),
   );
 
@@ -159,6 +208,8 @@ function feature_hr_surveys_field_default_field_instances() {
         'label' => 'above',
         'module' => 'date',
         'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
           'format_type' => 'long',
           'fromto' => 'both',
           'multiple_from' => '',
@@ -195,7 +246,7 @@ function feature_hr_surveys_field_default_field_instances() {
         'year_range' => '-3:+3',
       ),
       'type' => 'date_popup',
-      'weight' => 6,
+      'weight' => 25,
     ),
   );
 
@@ -219,6 +270,8 @@ function feature_hr_surveys_field_default_field_instances() {
         'module' => 'number',
         'settings' => array(
           'decimal_separator' => '.',
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
           'prefix_suffix' => TRUE,
           'scale' => 0,
           'thousand_separator' => '',
@@ -230,7 +283,7 @@ function feature_hr_surveys_field_default_field_instances() {
     'entity_type' => 'entityform',
     'field_name' => 'field_habitation_maxprice',
     'label' => 'Max. Pauschalmiete:',
-    'required' => 0,
+    'required' => 1,
     'settings' => array(
       'hr_surveys_question' => 1,
       'max' => 5000,
@@ -263,42 +316,7 @@ function feature_hr_surveys_field_default_field_instances() {
         ),
       ),
       'type' => 'sliderfield',
-      'weight' => 6,
-    ),
-  );
-
-  // Exported field_instance: 'entityform-survey-field_habitation_naddress'.
-  $field_instances['entityform-survey-field_habitation_naddress'] = array(
-    'bundle' => 'survey',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'text',
-        'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 6,
-      ),
-    ),
-    'entity_type' => 'entityform',
-    'field_name' => 'field_habitation_naddress',
-    'label' => 'Suche in der Nähe von:',
-    'required' => 0,
-    'settings' => array(
-      'hr_surveys_question' => 1,
-      'text_processing' => 0,
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'text',
-      'settings' => array(
-        'rows' => 2,
-      ),
-      'type' => 'text_textarea',
-      'weight' => 5,
+      'weight' => 9,
     ),
   );
 
@@ -316,7 +334,10 @@ function feature_hr_surveys_field_default_field_instances() {
       'default' => array(
         'label' => 'above',
         'module' => 'hr_surveys',
-        'settings' => array(),
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+        ),
         'type' => 'hr_surveys_boolean_yesno',
         'weight' => 7,
       ),
@@ -336,7 +357,7 @@ function feature_hr_surveys_field_default_field_instances() {
         'display_label' => 1,
       ),
       'type' => 'options_onoff',
-      'weight' => 6,
+      'weight' => 4,
     ),
   );
 
@@ -350,7 +371,10 @@ function feature_hr_surveys_field_default_field_instances() {
       'default' => array(
         'label' => 'above',
         'module' => 'text',
-        'settings' => array(),
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+        ),
         'type' => 'text_default',
         'weight' => 8,
       ),
@@ -371,42 +395,77 @@ function feature_hr_surveys_field_default_field_instances() {
         'rows' => 2,
       ),
       'type' => 'text_textarea',
-      'weight' => 7,
+      'weight' => 5,
     ),
   );
 
   // Exported field_instance: 'entityform-survey-field_habitation_rent_term'.
   $field_instances['entityform-survey-field_habitation_rent_term'] = array(
     'bundle' => 'survey',
-    'default_value' => NULL,
+    'default_value' => array(
+      0 => array(
+        'value' => 6,
+        'container' => array(
+          'max_value' => 24,
+          'min_value' => 1,
+        ),
+      ),
+    ),
     'deleted' => 0,
     'description' => '',
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'module' => 'text',
-        'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 7,
+        'module' => 'number',
+        'settings' => array(
+          'decimal_separator' => '.',
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+          'prefix_suffix' => TRUE,
+          'scale' => 0,
+          'thousand_separator' => '',
+        ),
+        'type' => 'number_integer',
+        'weight' => 9,
       ),
     ),
     'entity_type' => 'entityform',
     'field_name' => 'field_habitation_rent_term',
-    'label' => 'Mindestmietdauer:',
+    'label' => 'Mindestmietdauer',
     'required' => 1,
     'settings' => array(
       'hr_surveys_question' => 1,
-      'text_processing' => 0,
+      'max' => 24,
+      'min' => 1,
+      'prefix' => '',
+      'suffix' => '&nbsp;Months',
       'user_register_form' => FALSE,
     ),
     'widget' => array(
       'active' => 1,
-      'module' => 'text',
+      'module' => 'sliderfield',
       'settings' => array(
-        'size' => 60,
+        'sliderfield_settings' => array(
+          'adjust_field_max' => '',
+          'adjust_field_min' => '',
+          'animate' => 1,
+          'display_bubble' => 0,
+          'display_bubble_format' => '%{value}%&nbsp;Months',
+          'display_ignore_button' => 0,
+          'display_values' => 1,
+          'display_values_format' => '%{value}%&nbsp;Months',
+          'hide_inputs' => 0,
+          'hide_slider_handle_when_no_value' => 0,
+          'multi_value' => 0,
+          'orientation' => 'horizontal',
+          'range' => 'min',
+          'slider_length' => '97%',
+          'slider_style' => 'red',
+          'step' => 1,
+        ),
       ),
-      'type' => 'text_textfield',
-      'weight' => 4,
+      'type' => 'sliderfield',
+      'weight' => 24,
     ),
   );
 
@@ -420,7 +479,10 @@ function feature_hr_surveys_field_default_field_instances() {
       'default' => array(
         'label' => 'above',
         'module' => 'text',
-        'settings' => array(),
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+        ),
         'type' => 'text_default',
         'weight' => 9,
       ),
@@ -441,7 +503,7 @@ function feature_hr_surveys_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 8,
+      'weight' => 6,
     ),
   );
 
@@ -456,6 +518,8 @@ function feature_hr_surveys_field_default_field_instances() {
         'label' => 'above',
         'module' => 'entityreference',
         'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
           'link' => FALSE,
         ),
         'type' => 'entityreference_label',
@@ -475,7 +539,43 @@ function feature_hr_surveys_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_buttons',
-      'weight' => 4,
+      'weight' => 2,
+    ),
+  );
+
+  // Exported field_instance: 'entityform-survey-field_habitation_town_area'.
+  $field_instances['entityform-survey-field_habitation_town_area'] = array(
+    'bundle' => 'survey',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'entityreference',
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+          'link' => FALSE,
+        ),
+        'type' => 'entityreference_label',
+        'weight' => 10,
+      ),
+    ),
+    'entity_type' => 'entityform',
+    'field_name' => 'field_habitation_town_area',
+    'label' => 'Suche in der Nähe von:',
+    'required' => 0,
+    'settings' => array(
+      'hr_surveys_question' => 1,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_buttons',
+      'weight' => 3,
     ),
   );
 
@@ -493,9 +593,12 @@ function feature_hr_surveys_field_default_field_instances() {
       'default' => array(
         'label' => 'above',
         'module' => 'list',
-        'settings' => array(),
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+        ),
         'type' => 'list_default',
-        'weight' => 5,
+        'weight' => 6,
       ),
     ),
     'entity_type' => 'entityform',
@@ -529,9 +632,12 @@ function feature_hr_surveys_field_default_field_instances() {
       'default' => array(
         'label' => 'above',
         'module' => 'list',
-        'settings' => array(),
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+        ),
         'type' => 'list_default',
-        'weight' => 6,
+        'weight' => 7,
       ),
     ),
     'entity_type' => 'entityform',
@@ -547,7 +653,7 @@ function feature_hr_surveys_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_select',
-      'weight' => 24,
+      'weight' => 25,
     ),
   );
 
@@ -565,7 +671,10 @@ function feature_hr_surveys_field_default_field_instances() {
       'default' => array(
         'label' => 'above',
         'module' => 'list',
-        'settings' => array(),
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+        ),
         'type' => 'list_default',
         'weight' => 6,
       ),
@@ -597,7 +706,10 @@ function feature_hr_surveys_field_default_field_instances() {
       'default' => array(
         'label' => 'hidden',
         'module' => 'text',
-        'settings' => array(),
+        'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
+        ),
         'type' => 'text_default',
         'weight' => 0,
       ),
@@ -605,6 +717,8 @@ function feature_hr_surveys_field_default_field_instances() {
         'label' => 'hidden',
         'module' => 'text',
         'settings' => array(
+          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => '',
           'trim_length' => 600,
         ),
         'type' => 'text_summary_or_trimmed',
@@ -640,12 +754,8 @@ function feature_hr_surveys_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'module' => 'entityreference',
-        'settings' => array(
-          'links' => 1,
-          'view_mode' => 'token',
-        ),
-        'type' => 'entityreference_entity_view',
+        'settings' => array(),
+        'type' => 'hidden',
         'weight' => 3,
       ),
       'teaser' => array(
@@ -680,11 +790,8 @@ function feature_hr_surveys_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'module' => 'entityreference',
-        'settings' => array(
-          'link' => 0,
-        ),
-        'type' => 'entityreference_label',
+        'settings' => array(),
+        'type' => 'hidden',
         'weight' => 4,
       ),
       'teaser' => array(
@@ -723,13 +830,14 @@ function feature_hr_surveys_field_default_field_instances() {
   t('Email');
   t('Email ALL-INKL');
   t('Erwachsenen');
+  t('First name');
   t('Haustier (ja/nein und welches):');
   t('In Frage kommende Bezirke:');
   t('Kinder');
+  t('Last name');
   t('Max. Pauschalmiete:');
   t('Mietbeginn:');
-  t('Mindestmietdauer:');
-  t('Name');
+  t('Mindestmietdauer');
   t('Pets');
   t('Sonderwünsche:');
   t('Status');

@@ -13,7 +13,7 @@ function feature_hr_surveys_taxonomy_default_vocabularies() {
       'name' => 'Towns',
       'machine_name' => 'towns',
       'description' => '',
-      'hierarchy' => 0,
+      'hierarchy' => 1,
       'module' => 'taxonomy',
       'weight' => 0,
       'rdf_mapping' => array(

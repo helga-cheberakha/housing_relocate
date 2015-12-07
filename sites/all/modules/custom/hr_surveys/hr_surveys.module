@@ -371,6 +371,88 @@ function hr_surveys_theme_registry_alter(&$theme_registry) {
 }
 
 /**
+ * Allows modules to alter rows, useful to remove empty rows.
+ *
+ * When removing rows, you must unset the corresponding key/value pairs in both
+ * $element and $children.
+ *
+ * @param array &$element
+ *   An array containing render API code for the fieldgroup.
+ * @param array &$children
+ *   An array with the keys of the render API children of $element as returned
+ *   by element_children.
+ *
+ * @see element_children()
+ */
+function hr_surveys_field_group_table_rows_alter(array &$element, array &$children) {
+  global $user;
+
+  // Exclude field if user has no permission
+  foreach ($children as $index => $child) {
+    $field = field_info_field($child);
+
+    if (isset($element[$child]['#entity_type'])) {
+      $view_access = field_access('view', $field, $element[$child]['#entity_type']);
+      if ($view_access === FALSE) {
+        unset($children[$index]);
+        unset($element[$child]);
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_field_extra_fields().
+ */
+function hr_surveys_field_extra_fields() {
+  $extra['user']['user'] = array(
+    'display' => array(
+      'name' => array(
+        'label' => t('Name'),
+        'description' => t('Name'),
+        'weight' => 0,
+      ),
+      'mail' => array(
+        'label' => t('E-mail'),
+        'description' => t('E-mail'),
+        'weight' => 0,
+      ),
+    )
+  );
+  return $extra;
+}
+
+/**
+ * Implements hook_entity_view().
+ */
+function hr_surveys_entity_view($entity, $type, $view_mode, $langcode) {
+  // Extra fields for users
+  if ($type == 'user') {
+    $extra_fields = field_extra_fields_get_display('user', 'user', $view_mode);
+    // Get extrafield visibility.
+    if (!empty($extra_fields['mail']) && $extra_fields['mail']['visible'] == TRUE) {
+      // Do something awesome depending on the $view_mode (I've just added a default for all view_modes)
+      switch ($view_mode) {
+        default:
+          $entity->content['mail'] = array(
+            '#markup' => '<div class="item-mail">' . l($entity->mail, 'mailto:' . $entity->mail) . '</div>',
+          );
+      }
+    }
+
+    if (!empty($extra_fields['name']) && $extra_fields['name']['visible'] == TRUE) {
+      // Do something awesome depending on the $view_mode (I've just added a default for all view_modes)
+      switch ($view_mode) {
+        default:
+          $entity->content['name'] = array(
+            '#markup' => '<div class="item-name">' . $entity->name,
+          );
+      }
+    }
+  }
+}
+
+/**
  * Helper function
  * Creates new user after submittion entityform 'survey'
  *
@@ -426,10 +508,16 @@ function _hr_surveys_entityform_create_user($mail, $entityform) {
   }
 
   $wrapper = entity_metadata_wrapper('user', $account);
-  // Get full name of a new user from online survey form
-  $field_user_full_name = field_get_items('entityform', $entityform, 'field_applicant_name');
-  if (isset($field_user_full_name[0]['value']) && !empty($field_user_full_name[0]['value'])) {
-    $wrapper->field_user_full_name->set($field_user_full_name[0]['value']);
+  // Get full name of a new user from online survey form (which consists of first name and last name)
+  $field_user_firstname = field_get_items('entityform', $entityform, 'field_applicant_firstname');
+  $field_user_lastname = field_get_items('entityform', $entityform, 'field_applicant_lastname');
+  // Set first user name
+  if (isset($field_user_firstname[0]['value']) && !empty($field_user_firstname[0]['value'])) {
+    $wrapper->field_user_firstname->set($field_user_firstname[0]['value']);
+  }
+  // Set last user name
+  if (isset($field_user_lastname[0]['value']) && !empty($field_user_lastname[0]['value'])) {
+    $wrapper->field_user_lastname->set($field_user_lastname[0]['value']);
   }
   $wrapper->save();
   
@@ -437,6 +525,8 @@ function _hr_surveys_entityform_create_user($mail, $entityform) {
     return $account->uid;
   }
   else {
+    $message = t('An applicant hasn\'t been created successfully. Please check a new user') . ' ' . l($account->name, 'user/' . $account->uid);
+    watchdog('hr_surveys', $message);
     return NULL;
   }
 }

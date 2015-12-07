@@ -31,7 +31,9 @@
 .form-actions {
   margin: 3em 0 1em;
 }
-.field-name-field-habitation-maxprice .form-item .form-group {margin: 0;}
+.form-type-slider.form-item {margin-bottom: 2em;}
+.form-type-slider.form-item .form-group {margin: 0;}
+.form-type-slider.form-item .sliderfield-event-field-container .control-label {display: none;}
 .sliderfield-event-field-container .sliderfield-value-field {
   width: 15%;
   margin-bottom: 1em;
@@ -125,3 +127,8 @@
 }
 
 .field-group-table th {width: 20%;}
+
+a.btn.btn-primary.btn-lg:hover {
+  background-color: #286090;
+  border-color: #204d74;
+}

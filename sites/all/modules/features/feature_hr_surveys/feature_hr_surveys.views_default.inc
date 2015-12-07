@@ -138,21 +138,29 @@ function feature_hr_surveys_views_default_views() {
   $handler->display->display_options['pager']['type'] = 'full';
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'fields';
-  /* Field: User: Name */
-  $handler->display->display_options['fields']['name']['id'] = 'name';
-  $handler->display->display_options['fields']['name']['table'] = 'users';
-  $handler->display->display_options['fields']['name']['field'] = 'name';
-  $handler->display->display_options['fields']['name']['label'] = '';
-  $handler->display->display_options['fields']['name']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['name']['alter']['word_boundary'] = FALSE;
-  $handler->display->display_options['fields']['name']['alter']['ellipsis'] = FALSE;
-  $handler->display->display_options['fields']['name']['element_label_colon'] = FALSE;
-  /* Field: User: Full name */
-  $handler->display->display_options['fields']['field_user_full_name']['id'] = 'field_user_full_name';
-  $handler->display->display_options['fields']['field_user_full_name']['table'] = 'field_data_field_user_full_name';
-  $handler->display->display_options['fields']['field_user_full_name']['field'] = 'field_user_full_name';
-  $handler->display->display_options['fields']['field_user_full_name']['label'] = '';
-  $handler->display->display_options['fields']['field_user_full_name']['element_label_colon'] = FALSE;
+  /* Field: User: First name */
+  $handler->display->display_options['fields']['field_user_firstname']['id'] = 'field_user_firstname';
+  $handler->display->display_options['fields']['field_user_firstname']['table'] = 'field_data_field_user_firstname';
+  $handler->display->display_options['fields']['field_user_firstname']['field'] = 'field_user_firstname';
+  $handler->display->display_options['fields']['field_user_firstname']['label'] = '';
+  $handler->display->display_options['fields']['field_user_firstname']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_user_firstname']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_user_firstname']['settings'] = array(
+    'empty_fields_handler' => '',
+    'empty_fields_emptyfieldtext_empty_text' => '',
+  );
+  /* Field: User: Last name */
+  $handler->display->display_options['fields']['field_user_lastname']['id'] = 'field_user_lastname';
+  $handler->display->display_options['fields']['field_user_lastname']['table'] = 'field_data_field_user_lastname';
+  $handler->display->display_options['fields']['field_user_lastname']['field'] = 'field_user_lastname';
+  $handler->display->display_options['fields']['field_user_lastname']['label'] = '';
+  $handler->display->display_options['fields']['field_user_lastname']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['field_user_lastname']['alter']['text'] = '[field_user_firstname] [field_user_lastname]';
+  $handler->display->display_options['fields']['field_user_lastname']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_user_lastname']['settings'] = array(
+    'empty_fields_handler' => '',
+    'empty_fields_emptyfieldtext_empty_text' => '',
+  );
   /* Sort criterion: User: Created date */
   $handler->display->display_options['sorts']['created']['id'] = 'created';
   $handler->display->display_options['sorts']['created']['table'] = 'users';
@@ -181,12 +189,13 @@ function feature_hr_surveys_views_default_views() {
   $handler->display->display_options['defaults']['style_plugin'] = FALSE;
   $handler->display->display_options['style_plugin'] = 'entityreference_style';
   $handler->display->display_options['style_options']['search_fields'] = array(
-    'field_user_full_name' => 'field_user_full_name',
-    'name' => 0,
+    'field_user_firstname' => 'field_user_firstname',
+    'field_user_lastname' => 'field_user_lastname',
   );
   $handler->display->display_options['defaults']['style_options'] = FALSE;
   $handler->display->display_options['defaults']['row_plugin'] = FALSE;
   $handler->display->display_options['row_plugin'] = 'entityreference_fields';
+  $handler->display->display_options['row_options']['default_field_elements'] = FALSE;
   $handler->display->display_options['defaults']['row_options'] = FALSE;
   $translatables['agencies_contact'] = array(
     t('Master'),
@@ -203,6 +212,7 @@ function feature_hr_surveys_views_default_views() {
     t('‹ previous'),
     t('next ›'),
     t('last »'),
+    t('[field_user_firstname] [field_user_lastname]'),
     t('Entity Reference'),
   );
   $export['agencies_contact'] = $view;
@@ -245,17 +255,52 @@ function feature_hr_surveys_views_default_views() {
   $handler->display->display_options['relationships']['field_agency_contact_target_id']['field'] = 'field_agency_contact_target_id';
   $handler->display->display_options['relationships']['field_agency_contact_target_id']['label'] = 'Benutzer entity referenced from field_agency_contact';
   $handler->display->display_options['relationships']['field_agency_contact_target_id']['required'] = TRUE;
+  /* Field: User: Uid */
+  $handler->display->display_options['fields']['uid']['id'] = 'uid';
+  $handler->display->display_options['fields']['uid']['table'] = 'users';
+  $handler->display->display_options['fields']['uid']['field'] = 'uid';
+  $handler->display->display_options['fields']['uid']['relationship'] = 'field_agency_contact_target_id';
+  $handler->display->display_options['fields']['uid']['label'] = '';
+  $handler->display->display_options['fields']['uid']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['uid']['element_label_colon'] = FALSE;
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
+  /* Field: User: First name */
+  $handler->display->display_options['fields']['field_user_firstname']['id'] = 'field_user_firstname';
+  $handler->display->display_options['fields']['field_user_firstname']['table'] = 'field_data_field_user_firstname';
+  $handler->display->display_options['fields']['field_user_firstname']['field'] = 'field_user_firstname';
+  $handler->display->display_options['fields']['field_user_firstname']['relationship'] = 'field_agency_contact_target_id';
+  $handler->display->display_options['fields']['field_user_firstname']['label'] = '';
+  $handler->display->display_options['fields']['field_user_firstname']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_user_firstname']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_user_firstname']['settings'] = array(
+    'empty_fields_handler' => '',
+    'empty_fields_emptyfieldtext_empty_text' => '',
+  );
+  /* Field: User: Last name */
+  $handler->display->display_options['fields']['field_user_lastname']['id'] = 'field_user_lastname';
+  $handler->display->display_options['fields']['field_user_lastname']['table'] = 'field_data_field_user_lastname';
+  $handler->display->display_options['fields']['field_user_lastname']['field'] = 'field_user_lastname';
+  $handler->display->display_options['fields']['field_user_lastname']['relationship'] = 'field_agency_contact_target_id';
+  $handler->display->display_options['fields']['field_user_lastname']['label'] = 'Contact name';
+  $handler->display->display_options['fields']['field_user_lastname']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['field_user_lastname']['alter']['text'] = '[field_user_firstname] [field_user_lastname]';
+  $handler->display->display_options['fields']['field_user_lastname']['alter']['make_link'] = TRUE;
+  $handler->display->display_options['fields']['field_user_lastname']['alter']['path'] = 'user/[uid]';
+  $handler->display->display_options['fields']['field_user_lastname']['settings'] = array(
+    'empty_fields_handler' => '',
+    'empty_fields_emptyfieldtext_empty_text' => '',
+  );
   /* Field: User: E-mail */
   $handler->display->display_options['fields']['mail']['id'] = 'mail';
   $handler->display->display_options['fields']['mail']['table'] = 'users';
   $handler->display->display_options['fields']['mail']['field'] = 'mail';
   $handler->display->display_options['fields']['mail']['relationship'] = 'field_agency_contact_target_id';
+  $handler->display->display_options['fields']['mail']['label'] = 'Contact email';
   /* Field: Content: Town */
   $handler->display->display_options['fields']['field_agency_town']['id'] = 'field_agency_town';
   $handler->display->display_options['fields']['field_agency_town']['table'] = 'field_data_field_agency_town';
@@ -321,6 +366,165 @@ function feature_hr_surveys_views_default_views() {
   $handler->display->display_options['menu']['name'] = 'management';
   $handler->display->display_options['menu']['context'] = 0;
   $handler->display->display_options['menu']['context_only_inline'] = 0;
+
+  /* Display: Agency information (Block) */
+  $handler = $view->new_display('block', 'Agency information (Block)', 'block_agency_info');
+  $handler->display->display_options['defaults']['title'] = FALSE;
+  $handler->display->display_options['title'] = '<none>';
+  $handler->display->display_options['defaults']['style_plugin'] = FALSE;
+  $handler->display->display_options['style_plugin'] = 'flipped';
+  $handler->display->display_options['style_options']['columns'] = array(
+    'uid' => 'uid',
+    'title' => 'title',
+    'field_user_firstname' => 'field_user_firstname',
+    'field_user_lastname' => 'field_user_lastname',
+    'mail' => 'mail',
+    'field_agency_town' => 'field_agency_town',
+    'edit_node' => 'edit_node',
+    'view_node' => 'view_node',
+    'nothing' => 'nothing',
+  );
+  $handler->display->display_options['style_options']['default'] = '-1';
+  $handler->display->display_options['style_options']['info'] = array(
+    'uid' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'title' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_user_firstname' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_user_lastname' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'mail' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_agency_town' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'edit_node' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'view_node' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'nothing' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+  );
+  $handler->display->display_options['style_options']['flipped_table_header_first_field'] = 0;
+  $handler->display->display_options['defaults']['style_options'] = FALSE;
+  $handler->display->display_options['defaults']['row_plugin'] = FALSE;
+  $handler->display->display_options['defaults']['row_options'] = FALSE;
+  $handler->display->display_options['defaults']['header'] = FALSE;
+  $handler->display->display_options['defaults']['fields'] = FALSE;
+  /* Field: User: Uid */
+  $handler->display->display_options['fields']['uid']['id'] = 'uid';
+  $handler->display->display_options['fields']['uid']['table'] = 'users';
+  $handler->display->display_options['fields']['uid']['field'] = 'uid';
+  $handler->display->display_options['fields']['uid']['relationship'] = 'field_agency_contact_target_id';
+  $handler->display->display_options['fields']['uid']['label'] = '';
+  $handler->display->display_options['fields']['uid']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['uid']['element_label_colon'] = FALSE;
+  /* Field: User: E-mail */
+  $handler->display->display_options['fields']['mail']['id'] = 'mail';
+  $handler->display->display_options['fields']['mail']['table'] = 'users';
+  $handler->display->display_options['fields']['mail']['field'] = 'mail';
+  $handler->display->display_options['fields']['mail']['relationship'] = 'field_agency_contact_target_id';
+  $handler->display->display_options['fields']['mail']['label'] = '';
+  $handler->display->display_options['fields']['mail']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['mail']['element_label_colon'] = FALSE;
+  /* Field: User: First name */
+  $handler->display->display_options['fields']['field_user_firstname']['id'] = 'field_user_firstname';
+  $handler->display->display_options['fields']['field_user_firstname']['table'] = 'field_data_field_user_firstname';
+  $handler->display->display_options['fields']['field_user_firstname']['field'] = 'field_user_firstname';
+  $handler->display->display_options['fields']['field_user_firstname']['relationship'] = 'field_agency_contact_target_id';
+  $handler->display->display_options['fields']['field_user_firstname']['label'] = '';
+  $handler->display->display_options['fields']['field_user_firstname']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_user_firstname']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_user_firstname']['settings'] = array(
+    'empty_fields_handler' => '',
+    'empty_fields_emptyfieldtext_empty_text' => '',
+  );
+  /* Field: User: Last name */
+  $handler->display->display_options['fields']['field_user_lastname']['id'] = 'field_user_lastname';
+  $handler->display->display_options['fields']['field_user_lastname']['table'] = 'field_data_field_user_lastname';
+  $handler->display->display_options['fields']['field_user_lastname']['field'] = 'field_user_lastname';
+  $handler->display->display_options['fields']['field_user_lastname']['relationship'] = 'field_agency_contact_target_id';
+  $handler->display->display_options['fields']['field_user_lastname']['label'] = '';
+  $handler->display->display_options['fields']['field_user_lastname']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_user_lastname']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['field_user_lastname']['alter']['text'] = '[field_user_firstname] [field_user_lastname]';
+  $handler->display->display_options['fields']['field_user_lastname']['alter']['make_link'] = TRUE;
+  $handler->display->display_options['fields']['field_user_lastname']['alter']['path'] = 'user/[uid]';
+  $handler->display->display_options['fields']['field_user_lastname']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_user_lastname']['settings'] = array(
+    'empty_fields_handler' => '',
+    'empty_fields_emptyfieldtext_empty_text' => '',
+  );
+  /* Field: Contact info */
+  $handler->display->display_options['fields']['nothing']['id'] = 'nothing';
+  $handler->display->display_options['fields']['nothing']['table'] = 'views';
+  $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
+  $handler->display->display_options['fields']['nothing']['ui_name'] = 'Contact info';
+  $handler->display->display_options['fields']['nothing']['label'] = 'Contact';
+  $handler->display->display_options['fields']['nothing']['alter']['text'] = '[field_user_lastname], [mail]';
+  /* Field: Content: Town */
+  $handler->display->display_options['fields']['field_agency_town']['id'] = 'field_agency_town';
+  $handler->display->display_options['fields']['field_agency_town']['table'] = 'field_data_field_agency_town';
+  $handler->display->display_options['fields']['field_agency_town']['field'] = 'field_agency_town';
+  $handler->display->display_options['fields']['field_agency_town']['label'] = 'Towns';
+  $handler->display->display_options['fields']['field_agency_town']['settings'] = array(
+    'link' => 0,
+    'empty_fields_handler' => '',
+    'empty_fields_emptyfieldtext_empty_text' => '',
+  );
+  $handler->display->display_options['fields']['field_agency_town']['delta_offset'] = '0';
+  $handler->display->display_options['defaults']['arguments'] = FALSE;
+  /* Contextual filter: Content: Nid */
+  $handler->display->display_options['arguments']['nid']['id'] = 'nid';
+  $handler->display->display_options['arguments']['nid']['table'] = 'node';
+  $handler->display->display_options['arguments']['nid']['field'] = 'nid';
+  $handler->display->display_options['arguments']['nid']['default_action'] = 'default';
+  $handler->display->display_options['arguments']['nid']['default_argument_type'] = 'node';
+  $handler->display->display_options['arguments']['nid']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['nid']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['nid']['summary_options']['items_per_page'] = '25';
+  $handler->display->display_options['arguments']['nid']['specify_validation'] = TRUE;
+  $handler->display->display_options['arguments']['nid']['validate']['type'] = 'node';
+  $handler->display->display_options['arguments']['nid']['validate_options']['types'] = array(
+    'agency' => 'agency',
+  );
   $translatables['hr_agencies'] = array(
     t('Master'),
     t('Agencies'),
@@ -340,13 +544,20 @@ function feature_hr_surveys_views_default_views() {
     t('<ul class="action-links"><li><a href="/admin/people/create/agency">Add agency</a></li></ul>'),
     t('Benutzer entity referenced from field_agency_contact'),
     t('Title'),
-    t('E-mail'),
+    t('Contact name'),
+    t('[field_user_firstname] [field_user_lastname]'),
+    t('Contact email'),
     t('Towns'),
     t('Edit'),
     t('View'),
     t('Operation'),
     t('&nbsp;&nbsp;[view_node]&nbsp;&nbsp;[edit_node]'),
     t('Page'),
+    t('Agency information (Block)'),
+    t('<none>'),
+    t('Contact'),
+    t('[field_user_lastname], [mail]'),
+    t('All'),
   );
   $export['hr_agencies'] = $view;
 
@@ -377,13 +588,19 @@ function feature_hr_surveys_views_default_views() {
   $handler->display->display_options['style_plugin'] = 'hr_editableviews_table';
   $handler->display->display_options['style_options']['columns'] = array(
     'entityform_id' => 'entityform_id',
-    'field_user_full_name' => 'field_user_full_name',
+    'uid' => 'uid',
+    'field_user_firstname' => 'field_user_firstname',
+    'field_user_lastname' => 'field_user_lastname',
     'field_habitation_town' => 'field_habitation_town',
     'field_applicant_agencies_editable' => 'field_applicant_agencies_editable',
     'field_habitation_checkin' => 'field_habitation_checkin',
     'field_habitation_maxprice' => 'field_habitation_maxprice',
-    'field_survey_status_editable' => 'field_survey_status_editable',
     'edit_entityform' => 'edit_entityform',
+    'link_entityform' => 'link_entityform',
+    'nothing_1' => 'nothing_1',
+    'field_applicant_agencies' => 'field_applicant_agencies',
+    'field_survey_status_editable' => 'field_survey_status_editable',
+    'nothing' => 'nothing',
   );
   $handler->display->display_options['style_options']['default'] = '-1';
   $handler->display->display_options['style_options']['info'] = array(
@@ -394,16 +611,28 @@ function feature_hr_surveys_views_default_views() {
       'separator' => '',
       'empty_column' => 0,
     ),
-    'field_user_full_name' => array(
-      'sortable' => 1,
+    'uid' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_user_firstname' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_user_lastname' => array(
+      'sortable' => 0,
       'default_sort_order' => 'asc',
       'align' => '',
       'separator' => '',
       'empty_column' => 0,
     ),
     'field_habitation_town' => array(
-      'sortable' => 1,
-      'default_sort_order' => 'asc',
       'align' => '',
       'separator' => '',
       'empty_column' => 0,
@@ -427,6 +656,26 @@ function feature_hr_surveys_views_default_views() {
       'separator' => '',
       'empty_column' => 0,
     ),
+    'edit_entityform' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'link_entityform' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'nothing_1' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_applicant_agencies' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
     'field_survey_status_editable' => array(
       'sortable' => 1,
       'default_sort_order' => 'asc',
@@ -434,13 +683,12 @@ function feature_hr_surveys_views_default_views() {
       'separator' => '',
       'empty_column' => 0,
     ),
-    'edit_entityform' => array(
+    'nothing' => array(
       'align' => '',
       'separator' => '',
       'empty_column' => 0,
     ),
   );
-  $handler->display->display_options['style_options']['save_messages'] = 'none';
   $handler->display->display_options['style_options']['batch_size'] = '10';
   /* No results behavior: Global: Text area */
   $handler->display->display_options['empty']['area']['id'] = 'area';
@@ -459,14 +707,6 @@ function feature_hr_surveys_views_default_views() {
   $handler->display->display_options['fields']['entityform_id']['table'] = 'entityform';
   $handler->display->display_options['fields']['entityform_id']['field'] = 'entityform_id';
   $handler->display->display_options['fields']['entityform_id']['exclude'] = TRUE;
-  /* Field: User: Full name */
-  $handler->display->display_options['fields']['field_user_full_name']['id'] = 'field_user_full_name';
-  $handler->display->display_options['fields']['field_user_full_name']['table'] = 'field_data_field_user_full_name';
-  $handler->display->display_options['fields']['field_user_full_name']['field'] = 'field_user_full_name';
-  $handler->display->display_options['fields']['field_user_full_name']['relationship'] = 'user';
-  $handler->display->display_options['fields']['field_user_full_name']['label'] = 'Name';
-  $handler->display->display_options['fields']['field_user_full_name']['element_type'] = 'span';
-  $handler->display->display_options['fields']['field_user_full_name']['element_class'] = 'views-field-holder';
   /* Field: Entityform Submission: In Frage kommende Bezirke: */
   $handler->display->display_options['fields']['field_habitation_town']['id'] = 'field_habitation_town';
   $handler->display->display_options['fields']['field_habitation_town']['table'] = 'field_data_field_habitation_town';
@@ -572,14 +812,30 @@ function feature_hr_surveys_views_default_views() {
   $handler->display->display_options['fields']['uid']['exclude'] = TRUE;
   $handler->display->display_options['fields']['uid']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['uid']['link_to_user'] = FALSE;
-  /* Field: User: Full name */
-  $handler->display->display_options['fields']['field_user_full_name']['id'] = 'field_user_full_name';
-  $handler->display->display_options['fields']['field_user_full_name']['table'] = 'field_data_field_user_full_name';
-  $handler->display->display_options['fields']['field_user_full_name']['field'] = 'field_user_full_name';
-  $handler->display->display_options['fields']['field_user_full_name']['relationship'] = 'user';
-  $handler->display->display_options['fields']['field_user_full_name']['label'] = 'Name';
-  $handler->display->display_options['fields']['field_user_full_name']['element_type'] = 'span';
-  $handler->display->display_options['fields']['field_user_full_name']['element_class'] = 'views-field-holder';
+  /* Field: User: First name */
+  $handler->display->display_options['fields']['field_user_firstname']['id'] = 'field_user_firstname';
+  $handler->display->display_options['fields']['field_user_firstname']['table'] = 'field_data_field_user_firstname';
+  $handler->display->display_options['fields']['field_user_firstname']['field'] = 'field_user_firstname';
+  $handler->display->display_options['fields']['field_user_firstname']['relationship'] = 'user';
+  $handler->display->display_options['fields']['field_user_firstname']['label'] = '';
+  $handler->display->display_options['fields']['field_user_firstname']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_user_firstname']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_user_firstname']['settings'] = array(
+    'empty_fields_handler' => '',
+    'empty_fields_emptyfieldtext_empty_text' => '',
+  );
+  /* Field: User: Last name */
+  $handler->display->display_options['fields']['field_user_lastname']['id'] = 'field_user_lastname';
+  $handler->display->display_options['fields']['field_user_lastname']['table'] = 'field_data_field_user_lastname';
+  $handler->display->display_options['fields']['field_user_lastname']['field'] = 'field_user_lastname';
+  $handler->display->display_options['fields']['field_user_lastname']['relationship'] = 'user';
+  $handler->display->display_options['fields']['field_user_lastname']['label'] = 'Full name';
+  $handler->display->display_options['fields']['field_user_lastname']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['field_user_lastname']['alter']['text'] = '[field_user_firstname] [field_user_lastname]';
+  $handler->display->display_options['fields']['field_user_lastname']['settings'] = array(
+    'empty_fields_handler' => '',
+    'empty_fields_emptyfieldtext_empty_text' => '',
+  );
   /* Field: Entityform Submission: In Frage kommende Bezirke: */
   $handler->display->display_options['fields']['field_habitation_town']['id'] = 'field_habitation_town';
   $handler->display->display_options['fields']['field_habitation_town']['table'] = 'field_data_field_habitation_town';
@@ -588,7 +844,11 @@ function feature_hr_surveys_views_default_views() {
   $handler->display->display_options['fields']['field_habitation_town']['element_class'] = 'views-field-holder';
   $handler->display->display_options['fields']['field_habitation_town']['settings'] = array(
     'link' => 0,
+    'empty_fields_handler' => '',
+    'empty_fields_emptyfieldtext_empty_text' => '',
   );
+  $handler->display->display_options['fields']['field_habitation_town']['delta_offset'] = '0';
+  $handler->display->display_options['fields']['field_habitation_town']['multi_type'] = 'ul';
   /* Field: Entityform Submission: Agencies (editable) */
   $handler->display->display_options['fields']['field_applicant_agencies_editable']['id'] = 'field_applicant_agencies_editable';
   $handler->display->display_options['fields']['field_applicant_agencies_editable']['table'] = 'field_data_field_applicant_agencies';
@@ -627,14 +887,6 @@ function feature_hr_surveys_views_default_views() {
     'thousand_separator' => '',
     'prefix_suffix' => 1,
   );
-  /* Field: Entityform Submission: Status (editable) */
-  $handler->display->display_options['fields']['field_survey_status_editable']['id'] = 'field_survey_status_editable';
-  $handler->display->display_options['fields']['field_survey_status_editable']['table'] = 'field_data_field_survey_status';
-  $handler->display->display_options['fields']['field_survey_status_editable']['field'] = 'field_survey_status_editable';
-  $handler->display->display_options['fields']['field_survey_status_editable']['label'] = 'Status';
-  $handler->display->display_options['fields']['field_survey_status_editable']['widget_type'] = 'options_select';
-  $handler->display->display_options['fields']['field_survey_status_editable']['suppress_label'] = 1;
-  $handler->display->display_options['fields']['field_survey_status_editable']['suppress_description'] = 1;
   /* Field: Entityform Submission: Edit Link */
   $handler->display->display_options['fields']['edit_entityform']['id'] = 'edit_entityform';
   $handler->display->display_options['fields']['edit_entityform']['table'] = 'entityform';
@@ -682,6 +934,18 @@ function feature_hr_surveys_views_default_views() {
   );
   $handler->display->display_options['fields']['field_applicant_agencies']['delta_limit'] = '1';
   $handler->display->display_options['fields']['field_applicant_agencies']['delta_offset'] = '0';
+  /* Field: Entityform Submission: Status (editable) */
+  $handler->display->display_options['fields']['field_survey_status_editable']['id'] = 'field_survey_status_editable';
+  $handler->display->display_options['fields']['field_survey_status_editable']['table'] = 'field_data_field_survey_status';
+  $handler->display->display_options['fields']['field_survey_status_editable']['field'] = 'field_survey_status_editable';
+  $handler->display->display_options['fields']['field_survey_status_editable']['label'] = 'Status';
+  $handler->display->display_options['fields']['field_survey_status_editable']['settings'] = array(
+    'empty_fields_handler' => '',
+    'empty_fields_emptyfieldtext_empty_text' => '',
+  );
+  $handler->display->display_options['fields']['field_survey_status_editable']['widget_type'] = '0';
+  $handler->display->display_options['fields']['field_survey_status_editable']['suppress_label'] = 1;
+  $handler->display->display_options['fields']['field_survey_status_editable']['suppress_description'] = 1;
   /* Field: Global: Custom text */
   $handler->display->display_options['fields']['nothing']['id'] = 'nothing';
   $handler->display->display_options['fields']['nothing']['table'] = 'views';
@@ -734,23 +998,44 @@ function feature_hr_surveys_views_default_views() {
   $handler->display->display_options['fields']['entityform_id']['table'] = 'entityform';
   $handler->display->display_options['fields']['entityform_id']['field'] = 'entityform_id';
   $handler->display->display_options['fields']['entityform_id']['exclude'] = TRUE;
-  /* Field: User: Full name */
-  $handler->display->display_options['fields']['field_user_full_name']['id'] = 'field_user_full_name';
-  $handler->display->display_options['fields']['field_user_full_name']['table'] = 'field_data_field_user_full_name';
-  $handler->display->display_options['fields']['field_user_full_name']['field'] = 'field_user_full_name';
-  $handler->display->display_options['fields']['field_user_full_name']['relationship'] = 'user';
-  $handler->display->display_options['fields']['field_user_full_name']['label'] = 'Name';
-  $handler->display->display_options['fields']['field_user_full_name']['element_type'] = 'span';
-  $handler->display->display_options['fields']['field_user_full_name']['element_class'] = 'views-field-holder';
+  /* Field: User: First name */
+  $handler->display->display_options['fields']['field_user_firstname']['id'] = 'field_user_firstname';
+  $handler->display->display_options['fields']['field_user_firstname']['table'] = 'field_data_field_user_firstname';
+  $handler->display->display_options['fields']['field_user_firstname']['field'] = 'field_user_firstname';
+  $handler->display->display_options['fields']['field_user_firstname']['relationship'] = 'user';
+  $handler->display->display_options['fields']['field_user_firstname']['label'] = '';
+  $handler->display->display_options['fields']['field_user_firstname']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_user_firstname']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_user_firstname']['settings'] = array(
+    'empty_fields_handler' => '',
+    'empty_fields_emptyfieldtext_empty_text' => '',
+  );
+  /* Field: User: Last name */
+  $handler->display->display_options['fields']['field_user_lastname']['id'] = 'field_user_lastname';
+  $handler->display->display_options['fields']['field_user_lastname']['table'] = 'field_data_field_user_lastname';
+  $handler->display->display_options['fields']['field_user_lastname']['field'] = 'field_user_lastname';
+  $handler->display->display_options['fields']['field_user_lastname']['relationship'] = 'user';
+  $handler->display->display_options['fields']['field_user_lastname']['label'] = 'Full name';
+  $handler->display->display_options['fields']['field_user_lastname']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['field_user_lastname']['alter']['text'] = '[field_user_firstname] [field_user_lastname]';
+  $handler->display->display_options['fields']['field_user_lastname']['settings'] = array(
+    'empty_fields_handler' => '',
+    'empty_fields_emptyfieldtext_empty_text' => '',
+  );
   /* Field: Entityform Submission: In Frage kommende Bezirke: */
   $handler->display->display_options['fields']['field_habitation_town']['id'] = 'field_habitation_town';
   $handler->display->display_options['fields']['field_habitation_town']['table'] = 'field_data_field_habitation_town';
   $handler->display->display_options['fields']['field_habitation_town']['field'] = 'field_habitation_town';
+  $handler->display->display_options['fields']['field_habitation_town']['label'] = 'In Frage kommende Bezirke';
   $handler->display->display_options['fields']['field_habitation_town']['element_type'] = 'span';
   $handler->display->display_options['fields']['field_habitation_town']['element_class'] = 'views-field-holder';
   $handler->display->display_options['fields']['field_habitation_town']['settings'] = array(
     'link' => 0,
+    'empty_fields_handler' => '',
+    'empty_fields_emptyfieldtext_empty_text' => '',
   );
+  $handler->display->display_options['fields']['field_habitation_town']['delta_offset'] = '0';
+  $handler->display->display_options['fields']['field_habitation_town']['multi_type'] = 'ul';
   /* Field: Entityform Submission: Mietbeginn: */
   $handler->display->display_options['fields']['field_habitation_checkin']['id'] = 'field_habitation_checkin';
   $handler->display->display_options['fields']['field_habitation_checkin']['table'] = 'field_data_field_habitation_checkin';
@@ -770,16 +1055,23 @@ function feature_hr_surveys_views_default_views() {
   $handler->display->display_options['fields']['field_habitation_maxprice']['id'] = 'field_habitation_maxprice';
   $handler->display->display_options['fields']['field_habitation_maxprice']['table'] = 'field_data_field_habitation_maxprice';
   $handler->display->display_options['fields']['field_habitation_maxprice']['field'] = 'field_habitation_maxprice';
+  $handler->display->display_options['fields']['field_habitation_maxprice']['label'] = 'Max. Pauschalmiete';
   $handler->display->display_options['fields']['field_habitation_maxprice']['element_type'] = 'span';
   $handler->display->display_options['fields']['field_habitation_maxprice']['element_class'] = 'views-field-medium';
   $handler->display->display_options['fields']['field_habitation_maxprice']['settings'] = array(
     'thousand_separator' => '',
     'prefix_suffix' => 1,
+    'empty_fields_handler' => '',
+    'empty_fields_emptyfieldtext_empty_text' => '',
   );
   /* Field: Entityform Submission: Status */
   $handler->display->display_options['fields']['field_survey_status']['id'] = 'field_survey_status';
   $handler->display->display_options['fields']['field_survey_status']['table'] = 'field_data_field_survey_status';
   $handler->display->display_options['fields']['field_survey_status']['field'] = 'field_survey_status';
+  $handler->display->display_options['fields']['field_survey_status']['settings'] = array(
+    'empty_fields_handler' => '',
+    'empty_fields_emptyfieldtext_empty_text' => '',
+  );
   /* Field: Entityform Submission: Link */
   $handler->display->display_options['fields']['link_entityform']['id'] = 'link_entityform';
   $handler->display->display_options['fields']['link_entityform']['table'] = 'entityform';
@@ -818,6 +1110,416 @@ function feature_hr_surveys_views_default_views() {
   $handler->display->display_options['menu']['name'] = 'devel';
   $handler->display->display_options['menu']['context'] = 0;
   $handler->display->display_options['menu']['context_only_inline'] = 0;
+
+  /* Display: Applicants submission */
+  $handler = $view->new_display('page', 'Applicants submission', 'page_applicant_submission');
+  $handler->display->display_options['defaults']['title'] = FALSE;
+  $handler->display->display_options['title'] = '<none>';
+  $handler->display->display_options['defaults']['access'] = FALSE;
+  $handler->display->display_options['access']['type'] = 'role';
+  $handler->display->display_options['access']['role'] = array(
+    3 => '3',
+    4 => '4',
+    6 => '6',
+  );
+  $handler->display->display_options['defaults']['style_plugin'] = FALSE;
+  $handler->display->display_options['style_plugin'] = 'flipped';
+  $handler->display->display_options['style_options']['columns'] = array(
+    'entityform_id' => 'entityform_id',
+    'nothing' => 'nothing',
+    'field_user_firstname' => 'field_user_firstname',
+    'field_user_lastname' => 'field_user_lastname',
+    'mail' => 'mail',
+    'nothing_1' => 'nothing_1',
+    'field_habitation_maxprice' => 'field_habitation_maxprice',
+    'field_occupants_adults' => 'field_occupants_adults',
+    'field_occupants_kids' => 'field_occupants_kids',
+    'field_habitation_rent_term' => 'field_habitation_rent_term',
+    'field_habitation_checkin_1' => 'field_habitation_checkin_1',
+    'nothing_3' => 'nothing_3',
+    'nothing_2' => 'nothing_2',
+    'field_habitation_town' => 'field_habitation_town',
+    'nothing_4' => 'nothing_4',
+    'nothing_5' => 'nothing_5',
+    'field_habitation_pets' => 'field_habitation_pets',
+    'field_habitation_pets_info' => 'field_habitation_pets_info',
+    'field_habitation_request' => 'field_habitation_request',
+    'nothing_6' => 'nothing_6',
+    'field_survey_status' => 'field_survey_status',
+    'field_applicant_agencies' => 'field_applicant_agencies',
+  );
+  $handler->display->display_options['style_options']['default'] = '-1';
+  $handler->display->display_options['style_options']['info'] = array(
+    'entityform_id' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'nothing' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_user_firstname' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_user_lastname' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'mail' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'nothing_1' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_habitation_maxprice' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 1,
+    ),
+    'field_occupants_adults' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 1,
+    ),
+    'field_occupants_kids' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 1,
+    ),
+    'field_habitation_rent_term' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 1,
+    ),
+    'field_habitation_checkin_1' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 1,
+    ),
+    'nothing_3' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'nothing_2' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_habitation_town' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 1,
+    ),
+    'nothing_4' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'nothing_5' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_habitation_pets' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_habitation_pets_info' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 1,
+    ),
+    'field_habitation_request' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 1,
+    ),
+    'nothing_6' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_survey_status' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_applicant_agencies' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 1,
+    ),
+  );
+  $handler->display->display_options['style_options']['override'] = FALSE;
+  $handler->display->display_options['style_options']['flipped_table_header_first_field'] = 0;
+  $handler->display->display_options['defaults']['style_options'] = FALSE;
+  $handler->display->display_options['defaults']['row_plugin'] = FALSE;
+  $handler->display->display_options['defaults']['row_options'] = FALSE;
+  $handler->display->display_options['defaults']['relationships'] = FALSE;
+  /* Relationship: Entityform Submission: User uid */
+  $handler->display->display_options['relationships']['user']['id'] = 'user';
+  $handler->display->display_options['relationships']['user']['table'] = 'entityform';
+  $handler->display->display_options['relationships']['user']['field'] = 'user';
+  $handler->display->display_options['relationships']['user']['required'] = TRUE;
+  /* Relationship: Entity Reference: Referenced Entity */
+  $handler->display->display_options['relationships']['field_applicant_agencies_target_id']['id'] = 'field_applicant_agencies_target_id';
+  $handler->display->display_options['relationships']['field_applicant_agencies_target_id']['table'] = 'field_data_field_applicant_agencies';
+  $handler->display->display_options['relationships']['field_applicant_agencies_target_id']['field'] = 'field_applicant_agencies_target_id';
+  $handler->display->display_options['relationships']['field_applicant_agencies_target_id']['label'] = 'Inhalt entity referenced from field_applicant_agencies';
+  /* Relationship: Entity Reference: Referenced Entity */
+  $handler->display->display_options['relationships']['field_agency_contact_target_id']['id'] = 'field_agency_contact_target_id';
+  $handler->display->display_options['relationships']['field_agency_contact_target_id']['table'] = 'field_data_field_agency_contact';
+  $handler->display->display_options['relationships']['field_agency_contact_target_id']['field'] = 'field_agency_contact_target_id';
+  $handler->display->display_options['relationships']['field_agency_contact_target_id']['relationship'] = 'field_applicant_agencies_target_id';
+  $handler->display->display_options['relationships']['field_agency_contact_target_id']['label'] = 'Benutzer entity referenced from field_agency_contact';
+  $handler->display->display_options['defaults']['fields'] = FALSE;
+  /* Field: Entityform Submission: Entityform submission ID */
+  $handler->display->display_options['fields']['entityform_id']['id'] = 'entityform_id';
+  $handler->display->display_options['fields']['entityform_id']['table'] = 'entityform';
+  $handler->display->display_options['fields']['entityform_id']['field'] = 'entityform_id';
+  $handler->display->display_options['fields']['entityform_id']['exclude'] = TRUE;
+  /* Field: Global: Custom text */
+  $handler->display->display_options['fields']['nothing']['id'] = 'nothing';
+  $handler->display->display_options['fields']['nothing']['table'] = 'views';
+  $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
+  $handler->display->display_options['fields']['nothing']['label'] = 'Contact information:';
+  /* Field: User: First name */
+  $handler->display->display_options['fields']['field_user_firstname']['id'] = 'field_user_firstname';
+  $handler->display->display_options['fields']['field_user_firstname']['table'] = 'field_data_field_user_firstname';
+  $handler->display->display_options['fields']['field_user_firstname']['field'] = 'field_user_firstname';
+  $handler->display->display_options['fields']['field_user_firstname']['relationship'] = 'user';
+  $handler->display->display_options['fields']['field_user_firstname']['label'] = '';
+  $handler->display->display_options['fields']['field_user_firstname']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_user_firstname']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_user_firstname']['settings'] = array(
+    'empty_fields_handler' => '',
+    'empty_fields_emptyfieldtext_empty_text' => '',
+  );
+  /* Field: User: Last name */
+  $handler->display->display_options['fields']['field_user_lastname']['id'] = 'field_user_lastname';
+  $handler->display->display_options['fields']['field_user_lastname']['table'] = 'field_data_field_user_lastname';
+  $handler->display->display_options['fields']['field_user_lastname']['field'] = 'field_user_lastname';
+  $handler->display->display_options['fields']['field_user_lastname']['relationship'] = 'user';
+  $handler->display->display_options['fields']['field_user_lastname']['label'] = 'Full name';
+  $handler->display->display_options['fields']['field_user_lastname']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['field_user_lastname']['alter']['text'] = '[field_user_firstname] [field_user_lastname]';
+  $handler->display->display_options['fields']['field_user_lastname']['settings'] = array(
+    'empty_fields_handler' => '',
+    'empty_fields_emptyfieldtext_empty_text' => '',
+  );
+  /* Field: User: E-mail */
+  $handler->display->display_options['fields']['mail']['id'] = 'mail';
+  $handler->display->display_options['fields']['mail']['table'] = 'users';
+  $handler->display->display_options['fields']['mail']['field'] = 'mail';
+  $handler->display->display_options['fields']['mail']['relationship'] = 'user';
+  /* Field: Separator */
+  $handler->display->display_options['fields']['nothing_1']['id'] = 'nothing_1';
+  $handler->display->display_options['fields']['nothing_1']['table'] = 'views';
+  $handler->display->display_options['fields']['nothing_1']['field'] = 'nothing';
+  $handler->display->display_options['fields']['nothing_1']['ui_name'] = 'Separator';
+  $handler->display->display_options['fields']['nothing_1']['label'] = '';
+  $handler->display->display_options['fields']['nothing_1']['alter']['text'] = '&nbsp;';
+  $handler->display->display_options['fields']['nothing_1']['element_label_colon'] = FALSE;
+  /* Field: Entityform Submission: Max. Pauschalmiete: */
+  $handler->display->display_options['fields']['field_habitation_maxprice']['id'] = 'field_habitation_maxprice';
+  $handler->display->display_options['fields']['field_habitation_maxprice']['table'] = 'field_data_field_habitation_maxprice';
+  $handler->display->display_options['fields']['field_habitation_maxprice']['field'] = 'field_habitation_maxprice';
+  $handler->display->display_options['fields']['field_habitation_maxprice']['label'] = 'Max. Pauschalmiete';
+  $handler->display->display_options['fields']['field_habitation_maxprice']['element_type'] = 'span';
+  $handler->display->display_options['fields']['field_habitation_maxprice']['element_class'] = 'views-field-medium';
+  $handler->display->display_options['fields']['field_habitation_maxprice']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_habitation_maxprice']['settings'] = array(
+    'thousand_separator' => '',
+    'prefix_suffix' => 1,
+    'empty_fields_handler' => '',
+    'empty_fields_emptyfieldtext_empty_text' => '',
+  );
+  /* Field: Entityform Submission: Erwachsenen */
+  $handler->display->display_options['fields']['field_occupants_adults']['id'] = 'field_occupants_adults';
+  $handler->display->display_options['fields']['field_occupants_adults']['table'] = 'field_data_field_occupants_adults';
+  $handler->display->display_options['fields']['field_occupants_adults']['field'] = 'field_occupants_adults';
+  $handler->display->display_options['fields']['field_occupants_adults']['settings'] = array(
+    'empty_fields_handler' => '',
+    'empty_fields_emptyfieldtext_empty_text' => '',
+  );
+  /* Field: Entityform Submission: Kinder */
+  $handler->display->display_options['fields']['field_occupants_kids']['id'] = 'field_occupants_kids';
+  $handler->display->display_options['fields']['field_occupants_kids']['table'] = 'field_data_field_occupants_kids';
+  $handler->display->display_options['fields']['field_occupants_kids']['field'] = 'field_occupants_kids';
+  $handler->display->display_options['fields']['field_occupants_kids']['settings'] = array(
+    'empty_fields_handler' => '',
+    'empty_fields_emptyfieldtext_empty_text' => '',
+  );
+  /* Field: Entityform Submission: Mindestmietdauer */
+  $handler->display->display_options['fields']['field_habitation_rent_term']['id'] = 'field_habitation_rent_term';
+  $handler->display->display_options['fields']['field_habitation_rent_term']['table'] = 'field_data_field_habitation_rent_term';
+  $handler->display->display_options['fields']['field_habitation_rent_term']['field'] = 'field_habitation_rent_term';
+  $handler->display->display_options['fields']['field_habitation_rent_term']['settings'] = array(
+    'thousand_separator' => '',
+    'prefix_suffix' => 1,
+    'empty_fields_handler' => '',
+    'empty_fields_emptyfieldtext_empty_text' => '',
+  );
+  /* Field: Entityform Submission: Mietbeginn: */
+  $handler->display->display_options['fields']['field_habitation_checkin_1']['id'] = 'field_habitation_checkin_1';
+  $handler->display->display_options['fields']['field_habitation_checkin_1']['table'] = 'field_data_field_habitation_checkin';
+  $handler->display->display_options['fields']['field_habitation_checkin_1']['field'] = 'field_habitation_checkin';
+  $handler->display->display_options['fields']['field_habitation_checkin_1']['label'] = 'Mietbeginn';
+  $handler->display->display_options['fields']['field_habitation_checkin_1']['settings'] = array(
+    'format_type' => 'long',
+    'fromto' => 'both',
+    'multiple_number' => '',
+    'multiple_from' => '',
+    'multiple_to' => '',
+    'show_remaining_days' => 0,
+    'empty_fields_handler' => '',
+    'empty_fields_emptyfieldtext_empty_text' => '',
+  );
+  /* Field: Separator */
+  $handler->display->display_options['fields']['nothing_3']['id'] = 'nothing_3';
+  $handler->display->display_options['fields']['nothing_3']['table'] = 'views';
+  $handler->display->display_options['fields']['nothing_3']['field'] = 'nothing';
+  $handler->display->display_options['fields']['nothing_3']['ui_name'] = 'Separator';
+  $handler->display->display_options['fields']['nothing_3']['label'] = '';
+  $handler->display->display_options['fields']['nothing_3']['alter']['text'] = '&nbsp;';
+  $handler->display->display_options['fields']['nothing_3']['element_label_colon'] = FALSE;
+  /* Field: Global: Custom text */
+  $handler->display->display_options['fields']['nothing_2']['id'] = 'nothing_2';
+  $handler->display->display_options['fields']['nothing_2']['table'] = 'views';
+  $handler->display->display_options['fields']['nothing_2']['field'] = 'nothing';
+  $handler->display->display_options['fields']['nothing_2']['label'] = 'Location information:';
+  $handler->display->display_options['fields']['nothing_2']['alter']['text'] = '&nbsp;';
+  /* Field: Entityform Submission: In Frage kommende Bezirke: */
+  $handler->display->display_options['fields']['field_habitation_town']['id'] = 'field_habitation_town';
+  $handler->display->display_options['fields']['field_habitation_town']['table'] = 'field_data_field_habitation_town';
+  $handler->display->display_options['fields']['field_habitation_town']['field'] = 'field_habitation_town';
+  $handler->display->display_options['fields']['field_habitation_town']['element_type'] = 'span';
+  $handler->display->display_options['fields']['field_habitation_town']['element_class'] = 'views-field-holder';
+  $handler->display->display_options['fields']['field_habitation_town']['settings'] = array(
+    'link' => 0,
+  );
+  /* Field: Separator */
+  $handler->display->display_options['fields']['nothing_4']['id'] = 'nothing_4';
+  $handler->display->display_options['fields']['nothing_4']['table'] = 'views';
+  $handler->display->display_options['fields']['nothing_4']['field'] = 'nothing';
+  $handler->display->display_options['fields']['nothing_4']['ui_name'] = 'Separator';
+  $handler->display->display_options['fields']['nothing_4']['label'] = '';
+  $handler->display->display_options['fields']['nothing_4']['alter']['text'] = '&nbsp;';
+  $handler->display->display_options['fields']['nothing_4']['element_label_colon'] = FALSE;
+  /* Field: Global: Custom text */
+  $handler->display->display_options['fields']['nothing_5']['id'] = 'nothing_5';
+  $handler->display->display_options['fields']['nothing_5']['table'] = 'views';
+  $handler->display->display_options['fields']['nothing_5']['field'] = 'nothing';
+  $handler->display->display_options['fields']['nothing_5']['label'] = 'Additional information:';
+  $handler->display->display_options['fields']['nothing_5']['alter']['text'] = '&nbsp;';
+  /* Field: Entityform Submission: Haustier (ja/nein und welches): */
+  $handler->display->display_options['fields']['field_habitation_pets']['id'] = 'field_habitation_pets';
+  $handler->display->display_options['fields']['field_habitation_pets']['table'] = 'field_data_field_habitation_pets';
+  $handler->display->display_options['fields']['field_habitation_pets']['field'] = 'field_habitation_pets';
+  $handler->display->display_options['fields']['field_habitation_pets']['label'] = 'Haustier (ja/nein und welches)';
+  $handler->display->display_options['fields']['field_habitation_pets']['type'] = 'hr_surveys_boolean_yesno';
+  $handler->display->display_options['fields']['field_habitation_pets']['settings'] = array(
+    'empty_fields_handler' => '',
+    'empty_fields_emptyfieldtext_empty_text' => '',
+  );
+  /* Field: Entityform Submission: Pets */
+  $handler->display->display_options['fields']['field_habitation_pets_info']['id'] = 'field_habitation_pets_info';
+  $handler->display->display_options['fields']['field_habitation_pets_info']['table'] = 'field_data_field_habitation_pets_info';
+  $handler->display->display_options['fields']['field_habitation_pets_info']['field'] = 'field_habitation_pets_info';
+  $handler->display->display_options['fields']['field_habitation_pets_info']['settings'] = array(
+    'empty_fields_handler' => '',
+    'empty_fields_emptyfieldtext_empty_text' => '',
+  );
+  /* Field: Entityform Submission: Sonderwünsche: */
+  $handler->display->display_options['fields']['field_habitation_request']['id'] = 'field_habitation_request';
+  $handler->display->display_options['fields']['field_habitation_request']['table'] = 'field_data_field_habitation_request';
+  $handler->display->display_options['fields']['field_habitation_request']['field'] = 'field_habitation_request';
+  $handler->display->display_options['fields']['field_habitation_request']['label'] = 'Sonderwünsche';
+  $handler->display->display_options['fields']['field_habitation_request']['settings'] = array(
+    'empty_fields_handler' => '',
+    'empty_fields_emptyfieldtext_empty_text' => '',
+  );
+  /* Field: Separator */
+  $handler->display->display_options['fields']['nothing_6']['id'] = 'nothing_6';
+  $handler->display->display_options['fields']['nothing_6']['table'] = 'views';
+  $handler->display->display_options['fields']['nothing_6']['field'] = 'nothing';
+  $handler->display->display_options['fields']['nothing_6']['ui_name'] = 'Separator';
+  $handler->display->display_options['fields']['nothing_6']['label'] = '';
+  $handler->display->display_options['fields']['nothing_6']['alter']['text'] = '&nbsp;';
+  $handler->display->display_options['fields']['nothing_6']['element_label_colon'] = FALSE;
+  /* Field: Entityform Submission: Status */
+  $handler->display->display_options['fields']['field_survey_status']['id'] = 'field_survey_status';
+  $handler->display->display_options['fields']['field_survey_status']['table'] = 'field_data_field_survey_status';
+  $handler->display->display_options['fields']['field_survey_status']['field'] = 'field_survey_status';
+  $handler->display->display_options['fields']['field_survey_status']['settings'] = array(
+    'empty_fields_handler' => '',
+    'empty_fields_emptyfieldtext_empty_text' => '',
+  );
+  /* Field: Entityform Submission: Agencies */
+  $handler->display->display_options['fields']['field_applicant_agencies']['id'] = 'field_applicant_agencies';
+  $handler->display->display_options['fields']['field_applicant_agencies']['table'] = 'field_data_field_applicant_agencies';
+  $handler->display->display_options['fields']['field_applicant_agencies']['field'] = 'field_applicant_agencies';
+  $handler->display->display_options['fields']['field_applicant_agencies']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_applicant_agencies']['settings'] = array(
+    'link' => 0,
+    'empty_fields_handler' => '',
+    'empty_fields_emptyfieldtext_empty_text' => '',
+  );
+  $handler->display->display_options['fields']['field_applicant_agencies']['delta_offset'] = '0';
+  $handler->display->display_options['defaults']['arguments'] = FALSE;
+  /* Contextual filter: Entityform Submission: Entityform submission ID */
+  $handler->display->display_options['arguments']['entityform_id']['id'] = 'entityform_id';
+  $handler->display->display_options['arguments']['entityform_id']['table'] = 'entityform';
+  $handler->display->display_options['arguments']['entityform_id']['field'] = 'entityform_id';
+  $handler->display->display_options['arguments']['entityform_id']['default_action'] = 'default';
+  $handler->display->display_options['arguments']['entityform_id']['default_argument_type'] = 'raw';
+  $handler->display->display_options['arguments']['entityform_id']['default_argument_options']['index'] = '1';
+  $handler->display->display_options['arguments']['entityform_id']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['entityform_id']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['entityform_id']['summary_options']['items_per_page'] = '25';
+  $handler->display->display_options['path'] = 'entityform/%';
+  $handler->display->display_options['menu']['title'] = 'Agency Online surveys';
+  $handler->display->display_options['menu']['weight'] = '-10';
+  $handler->display->display_options['menu']['name'] = 'devel';
+  $handler->display->display_options['menu']['context'] = 0;
+  $handler->display->display_options['menu']['context_only_inline'] = 0;
   $translatables['online_surveys'] = array(
     t('Master'),
     t('Applicants'),
@@ -839,7 +1541,6 @@ function feature_hr_surveys_views_default_views() {
     t('Entityform submission ID'),
     t('.'),
     t(','),
-    t('Name'),
     t('In Frage kommende Bezirke:'),
     t('Agencies'),
     t('Check in'),
@@ -850,6 +1551,8 @@ function feature_hr_surveys_views_default_views() {
     t('Operation'),
     t('&nbsp;&nbsp;[link_entityform]&nbsp;&nbsp;[edit_entityform]'),
     t('Page'),
+    t('Full name'),
+    t('[field_user_firstname] [field_user_lastname]'),
     t('Notify the agency'),
     t('<br>&nbsp;&nbsp;[nothing_1]'),
     t('&nbsp;&nbsp;[link_entityform]&nbsp;|&nbsp;[edit_entityform]
@@ -857,10 +1560,135 @@ function feature_hr_surveys_views_default_views() {
     t('Applicants by agency(Page)'),
     t('Inhalt entity referenced from field_applicant_agencies'),
     t('Benutzer entity referenced from field_agency_contact'),
+    t('In Frage kommende Bezirke'),
+    t('Max. Pauschalmiete'),
     t('&nbsp;&nbsp;[link_entityform]'),
     t('Alle'),
+    t('Applicants submission'),
+    t('<none>'),
+    t('Contact information:'),
+    t('E-mail'),
+    t('&nbsp;'),
+    t('Erwachsenen'),
+    t('Kinder'),
+    t('Mindestmietdauer'),
+    t('Mietbeginn'),
+    t('Location information:'),
+    t('Additional information:'),
+    t('Haustier (ja/nein und welches)'),
+    t('Pets'),
+    t('Sonderwünsche'),
+    t('All'),
   );
   $export['online_surveys'] = $view;
+
+  $view = new view();
+  $view->name = 'towns_and_areas';
+  $view->description = '';
+  $view->tag = 'default';
+  $view->base_table = 'taxonomy_term_data';
+  $view->human_name = 'Towns and areas';
+  $view->core = 7;
+  $view->api_version = '3.0';
+  $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
+
+  /* Display: Master */
+  $handler = $view->new_display('default', 'Master', 'default');
+  $handler->display->display_options['use_more_always'] = FALSE;
+  $handler->display->display_options['access']['type'] = 'perm';
+  $handler->display->display_options['cache']['type'] = 'none';
+  $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['exposed_form']['type'] = 'basic';
+  $handler->display->display_options['pager']['type'] = 'none';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['style_plugin'] = 'default';
+  $handler->display->display_options['row_plugin'] = 'fields';
+  /* Field: Taxonomy term: Name */
+  $handler->display->display_options['fields']['name']['id'] = 'name';
+  $handler->display->display_options['fields']['name']['table'] = 'taxonomy_term_data';
+  $handler->display->display_options['fields']['name']['field'] = 'name';
+  $handler->display->display_options['fields']['name']['label'] = '';
+  $handler->display->display_options['fields']['name']['alter']['word_boundary'] = FALSE;
+  $handler->display->display_options['fields']['name']['alter']['ellipsis'] = FALSE;
+  $handler->display->display_options['fields']['name']['element_label_colon'] = FALSE;
+  /* Filter criterion: Taxonomy vocabulary: Machine name */
+  $handler->display->display_options['filters']['machine_name']['id'] = 'machine_name';
+  $handler->display->display_options['filters']['machine_name']['table'] = 'taxonomy_vocabulary';
+  $handler->display->display_options['filters']['machine_name']['field'] = 'machine_name';
+  $handler->display->display_options['filters']['machine_name']['value'] = array(
+    'towns' => 'towns',
+  );
+  /* Filter criterion: Taxonomy term: Parent term */
+  $handler->display->display_options['filters']['parent']['id'] = 'parent';
+  $handler->display->display_options['filters']['parent']['table'] = 'taxonomy_term_hierarchy';
+  $handler->display->display_options['filters']['parent']['field'] = 'parent';
+  $handler->display->display_options['filters']['parent']['value']['value'] = '0';
+
+  /* Display: Towns (Entity Reference) */
+  $handler = $view->new_display('entityreference', 'Towns (Entity Reference)', 'entityreference_1');
+  $handler->display->display_options['defaults']['title'] = FALSE;
+  $handler->display->display_options['pager']['type'] = 'some';
+  $handler->display->display_options['defaults']['style_plugin'] = FALSE;
+  $handler->display->display_options['style_plugin'] = 'entityreference_style';
+  $handler->display->display_options['style_options']['search_fields'] = array(
+    'name' => 'name',
+  );
+  $handler->display->display_options['defaults']['style_options'] = FALSE;
+  $handler->display->display_options['defaults']['row_plugin'] = FALSE;
+  $handler->display->display_options['row_plugin'] = 'entityreference_fields';
+  $handler->display->display_options['defaults']['row_options'] = FALSE;
+
+  /* Display: Towns areas (Entity Reference) */
+  $handler = $view->new_display('entityreference', 'Towns areas (Entity Reference)', 'entityreference_town_areas');
+  $handler->display->display_options['defaults']['title'] = FALSE;
+  $handler->display->display_options['pager']['type'] = 'some';
+  $handler->display->display_options['defaults']['style_plugin'] = FALSE;
+  $handler->display->display_options['style_plugin'] = 'entityreference_style';
+  $handler->display->display_options['style_options']['search_fields'] = array(
+    'name' => 'name',
+  );
+  $handler->display->display_options['defaults']['style_options'] = FALSE;
+  $handler->display->display_options['defaults']['row_plugin'] = FALSE;
+  $handler->display->display_options['row_plugin'] = 'entityreference_fields';
+  $handler->display->display_options['defaults']['row_options'] = FALSE;
+  $handler->display->display_options['defaults']['arguments'] = FALSE;
+  /* Contextual filter: Taxonomy term: Parent term */
+  $handler->display->display_options['arguments']['parent']['id'] = 'parent';
+  $handler->display->display_options['arguments']['parent']['table'] = 'taxonomy_term_hierarchy';
+  $handler->display->display_options['arguments']['parent']['field'] = 'parent';
+  $handler->display->display_options['arguments']['parent']['default_action'] = 'default';
+  $handler->display->display_options['arguments']['parent']['default_argument_type'] = 'fixed';
+  $handler->display->display_options['arguments']['parent']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['parent']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['parent']['summary_options']['items_per_page'] = '25';
+  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Filter criterion: Taxonomy vocabulary: Machine name */
+  $handler->display->display_options['filters']['machine_name']['id'] = 'machine_name';
+  $handler->display->display_options['filters']['machine_name']['table'] = 'taxonomy_vocabulary';
+  $handler->display->display_options['filters']['machine_name']['field'] = 'machine_name';
+  $handler->display->display_options['filters']['machine_name']['value'] = array(
+    'towns' => 'towns',
+  );
+  /* Filter criterion: Taxonomy term: Parent term */
+  $handler->display->display_options['filters']['parent']['id'] = 'parent';
+  $handler->display->display_options['filters']['parent']['table'] = 'taxonomy_term_hierarchy';
+  $handler->display->display_options['filters']['parent']['field'] = 'parent';
+  $handler->display->display_options['filters']['parent']['operator'] = '!=';
+  $handler->display->display_options['filters']['parent']['value']['value'] = '0';
+  $translatables['towns_and_areas'] = array(
+    t('Master'),
+    t('more'),
+    t('Apply'),
+    t('Reset'),
+    t('Sort by'),
+    t('Asc'),
+    t('Desc'),
+    t('Towns (Entity Reference)'),
+    t('Towns areas (Entity Reference)'),
+    t('All'),
+  );
+  $export['towns_and_areas'] = $view;
 
   return $export;
 }

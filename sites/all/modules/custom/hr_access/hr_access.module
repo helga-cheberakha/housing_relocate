@@ -386,7 +386,7 @@ function hr_access_form_user_profile_register_form_submit($form, &$form_state) {
     $form_state['redirect'] = 'admin/surveys/agencies';
     // Create content-type 'agency' when user with role 'agency' was created
     $lang_default = language_default();
-    $lang = (isset($lang_default->language)) ? $lang_default->language : LANGUAGE_NONE;
+    $lang = LANGUAGE_NONE;
     
     $node = new stdClass();
     $node->title = $form_state['values']['user_agency_title'];
@@ -413,7 +413,6 @@ function hr_access_form_user_profile_register_form_submit($form, &$form_state) {
       'target_id' => $account->uid,
       'target_type' => 'user',
     );
-    
     $node = node_submit($node); // Prepare node for saving
     node_save($node);
     $message = t('@title been added.', array(

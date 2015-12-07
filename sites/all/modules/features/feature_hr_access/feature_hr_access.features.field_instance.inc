@@ -21,7 +21,7 @@ function feature_hr_access_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 2,
+        'weight' => 6,
       ),
       'full' => array(
         'label' => 'above',
@@ -33,7 +33,7 @@ function feature_hr_access_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 2,
+        'weight' => 5,
       ),
     ),
     'entity_type' => 'user',
@@ -55,72 +55,8 @@ function feature_hr_access_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'user-user-field_user_full_name'.
-  $field_instances['user-user-field_user_full_name'] = array(
-    'bundle' => 'user',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'hidden',
-        'module' => 'views_field_formatter',
-        'settings' => array(
-          'views_field_formatter' => array(
-            'multiple' => 0,
-            'view' => 'account_display::block_main',
-          ),
-        ),
-        'type' => 'views_field_formatter',
-        'weight' => 0,
-      ),
-      'full' => array(
-        'label' => 'hidden',
-        'module' => 'views_field_formatter',
-        'settings' => array(
-          'views_field_formatter' => array(
-            'multiple' => 0,
-            'view' => 'account_display::block_main',
-          ),
-        ),
-        'type' => 'views_field_formatter',
-        'weight' => 0,
-      ),
-      'token' => array(
-        'label' => 'hidden',
-        'module' => 'views_field_formatter',
-        'settings' => array(
-          'views_field_formatter' => array(
-            'multiple' => 0,
-            'view' => 'account_display::block_name_email',
-          ),
-        ),
-        'type' => 'views_field_formatter',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'user',
-    'field_name' => 'field_user_full_name',
-    'label' => 'Full name',
-    'required' => 0,
-    'settings' => array(
-      'text_processing' => 0,
-      'user_register_form' => 1,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'text',
-      'settings' => array(
-        'size' => 60,
-      ),
-      'type' => 'text_textfield',
-      'weight' => 0,
-    ),
-  );
-
   // Translatables
   // Included for use with string extractors like potx.
-  t('Full name');
   t('Hash');
 
   return $field_instances;

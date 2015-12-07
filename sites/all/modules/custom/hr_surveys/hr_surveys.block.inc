@@ -61,7 +61,7 @@ function hr_surveys_user_agency_block() {
     $links[] = array(
       'title' => t('Online surveys'),
       'href' => 'agency/applicants',
-      'attributes' => array('class' => array('navbar-brand')),
+      'attributes' => array('class' => array('btn', 'btn-primary', 'btn-lg')),
     );
   }
 
