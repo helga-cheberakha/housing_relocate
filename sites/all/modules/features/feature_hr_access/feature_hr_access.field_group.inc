@@ -55,11 +55,10 @@ function feature_hr_access_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Information',
-    'weight' => '0',
+    'weight' => '1',
     'children' => array(
       0 => 'field_user_firstname',
       1 => 'field_user_lastname',
-      2 => 'mail',
     ),
     'format_type' => 'table',
     'format_settings' => array(
@@ -69,7 +68,7 @@ function feature_hr_access_field_group_info() {
         'desc' => '',
         'first_column' => '',
         'second_column' => '',
-        'empty_label_behavior' => '1',
+        'empty_label_behavior' => '2',
         'table_row_striping' => 0,
         'always_show_field_label' => 0,
         'classes' => 'group-user-info field-group-table',

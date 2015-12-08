@@ -329,7 +329,7 @@ function feature_hr_surveys_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Service information',
-    'weight' => '7',
+    'weight' => '6',
     'children' => array(
       0 => 'field_applicant_agencies',
       1 => 'field_applicant_email_allinkl',

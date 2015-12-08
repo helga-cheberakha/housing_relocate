@@ -32,26 +32,26 @@
       $field_name = reset($field_names); ?>
       <thead>
       <tr>
-        <th class="field-label <?php print($header_classes[$field_name]); ?>">
+        <th class="field-label <?php print ($header_classes[$field_name]); ?>">
           <?php print $header[$field_name] ?>
         </th>
         <?php foreach ($rows_flipped[$field_name] as $index => $item) : ?>
-          <th class="field-content <?php print($field_classes[$field_name][$index]); ?>">
+          <th class="field-content <?php print ($field_classes[$field_name][$index]); ?>">
             <?php print $item; ?>
           </th>
         <?php endforeach; ?>
       </tr>
       </thead>
       <?php array_shift($rows_flipped); ?>
-    <?php endif; // $first_row_header ?>
+    <?php endif; ?>
     <tbody>
     <?php foreach ($rows_flipped as $field_name => $row) : ?>
       <tr class="<?php print $row_classes_flipped[$field_name]; ?>">
-        <th class="field-label <?php print($header_classes[$field_name]); ?>">
+        <th class="field-label <?php print ($header_classes[$field_name]); ?>">
           <?php echo $header[$field_name]; ?>
         </th>
         <?php foreach ($row as $index => $item): ?>
-          <td class="field-content <?php print($field_classes[$field_name][$index]); ?>">
+          <td class="field-content <?php print ($field_classes[$field_name][$index]); ?>">
             <?php echo $item; ?>
           </td>
         <?php endforeach; ?>

@@ -54,20 +54,6 @@ function hr_surveys_form_alter(&$form, $form_state, $form_id) {
         }
       }
 
-      // Show/hide additional information about pets. Depends on status of the checkbox 'field_habitation_pets'
-      if (isset($form['field_habitation_pets']) && isset($form['field_habitation_pets_info'])) {
-        $lang_pets = (isset($form['field_habitation_pets']['#language']) && !empty($form['field_habitation_pets']['#language'])) ? $form['field_habitation_pets']['#language'] : LANGUAGE_NONE;
-        $lang_pets_info = (isset($form['field_habitation_pets_info']['#language']) && !empty($form['field_habitation_pets_info']['#language'])) ? $form['field_habitation_pets_info']['#language'] : LANGUAGE_NONE;
-
-        if (isset($form['field_habitation_pets'][$lang_pets]) && isset($form['field_habitation_pets_info'][$lang_pets_info][0]['value'])) {
-          $form['field_habitation_pets_info'][$lang_pets_info][0]['value']['#states'] = array(
-            'visible' => array(
-              'input[name="field_habitation_pets[' . $lang_pets . ']"]' => array('checked' => TRUE),
-            )
-          );
-        }
-      }
-
       // Add custom submit handler
       // Create new user after survey entityfotm submittion
       $form['#submit'][] = 'hr_surveys_entityform_form_submit';
@@ -80,6 +66,20 @@ function hr_surveys_form_alter(&$form, $form_state, $form_id) {
       $form['#submit'][] = 'hr_surveys_entityform_form_edit_submit';
       if (isset($form['actions']['save'])) {
         $form['actions']['save']['#submit'][] = 'hr_surveys_entityform_form_edit_submit';
+      }
+    }
+
+    // Show/hide additional information about pets. Depends on status of the checkbox 'field_habitation_pets'
+    if (isset($form['field_habitation_pets']) && isset($form['field_habitation_pets_info'])) {
+      $lang_pets = (isset($form['field_habitation_pets']['#language']) && !empty($form['field_habitation_pets']['#language'])) ? $form['field_habitation_pets']['#language'] : LANGUAGE_NONE;
+      $lang_pets_info = (isset($form['field_habitation_pets_info']['#language']) && !empty($form['field_habitation_pets_info']['#language'])) ? $form['field_habitation_pets_info']['#language'] : LANGUAGE_NONE;
+
+      if (isset($form['field_habitation_pets'][$lang_pets]) && isset($form['field_habitation_pets_info'][$lang_pets_info][0]['value'])) {
+        $form['field_habitation_pets_info'][$lang_pets_info][0]['value']['#states'] = array(
+          'visible' => array(
+            'input[name="field_habitation_pets[' . $lang_pets . ']"]' => array('checked' => TRUE),
+          )
+        );
       }
     }
 
@@ -180,10 +180,10 @@ function hr_surveys_field_widget_form_alter(&$element, &$form_state, $context) {
     // Gets a referenced town for the current survey
     if (isset($element['#entity']) && !empty($element['#entity']) && isset($element['#entity']->entityform_id)) {
       $field_towns = field_get_items('entityform', $element['#entity'], 'field_habitation_town');
-      
+
       if (isset($field_towns) && !empty($field_towns)) {
         foreach ($field_towns as $item) {
-          $town_tids[] = $item['target_id'];
+          $town_tids[] = $item['tid'];
         }
 
         // If town exists get all agencies which have references to the same town
@@ -221,6 +221,11 @@ function hr_surveys_field_widget_form_alter(&$element, &$form_state, $context) {
         }
       }
     }
+  }
+
+  // Hide children for a taxonomy term if a parent term isn't checked
+  if (isset($element['#type']) && $element['#type'] == 'checkbox_tree') {
+    $element['#attached']['js'] = array(drupal_get_path('module', 'hr_surveys') . '/js/hr_term_reference_tree.js');
   }
 }
 
@@ -368,6 +373,30 @@ function hr_surveys_theme_registry_alter(&$theme_registry) {
   if (isset($theme_registry['views_flipped_table'])) {
     $theme_registry['views_flipped_table']['path'] = drupal_get_path('module', 'hr_surveys') . '/theme';
   }
+
+  if (isset($theme_registry['checkbox_tree_item'])) {
+    $theme_registry['checkbox_tree_item']['theme path'] = drupal_get_path('module', 'hr_surveys');
+    $theme_registry['checkbox_tree_item']['function'] = 'hr_checkbox_tree_item';
+  }
+}
+
+/**
+ * Override theme function for printing a single item in the tree, followed by that item's children
+ * (which may be another checkbox_tree_level).
+ *
+ * @param $variables
+ * @return string
+ */
+function hr_checkbox_tree_item($variables) {
+  $element = $variables['element'];
+  $children = element_children($element);
+  $output = '';
+
+  foreach ($children as $child) {
+    $output .= drupal_render($element[$child]);
+  }
+
+  return $output;
 }
 
 /**

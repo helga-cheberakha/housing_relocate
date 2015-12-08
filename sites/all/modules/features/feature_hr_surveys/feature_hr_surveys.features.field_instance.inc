@@ -246,7 +246,7 @@ function feature_hr_surveys_field_default_field_instances() {
         'year_range' => '-3:+3',
       ),
       'type' => 'date_popup',
-      'weight' => 25,
+      'weight' => 4,
     ),
   );
 
@@ -357,7 +357,7 @@ function feature_hr_surveys_field_default_field_instances() {
         'display_label' => 1,
       ),
       'type' => 'options_onoff',
-      'weight' => 4,
+      'weight' => 3,
     ),
   );
 
@@ -395,7 +395,7 @@ function feature_hr_surveys_field_default_field_instances() {
         'rows' => 2,
       ),
       'type' => 'text_textarea',
-      'weight' => 5,
+      'weight' => 4,
     ),
   );
 
@@ -426,7 +426,7 @@ function feature_hr_surveys_field_default_field_instances() {
           'thousand_separator' => '',
         ),
         'type' => 'number_integer',
-        'weight' => 9,
+        'weight' => 11,
       ),
     ),
     'entity_type' => 'entityform',
@@ -465,7 +465,7 @@ function feature_hr_surveys_field_default_field_instances() {
         ),
       ),
       'type' => 'sliderfield',
-      'weight' => 24,
+      'weight' => 3,
     ),
   );
 
@@ -503,7 +503,7 @@ function feature_hr_surveys_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 6,
+      'weight' => 5,
     ),
   );
 
@@ -516,14 +516,13 @@ function feature_hr_surveys_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'module' => 'entityreference',
+        'module' => 'taxonomy',
         'settings' => array(
           'empty_fields_emptyfieldtext_empty_text' => '',
           'empty_fields_handler' => '',
-          'link' => FALSE,
         ),
-        'type' => 'entityreference_label',
-        'weight' => 5,
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 12,
       ),
     ),
     'entity_type' => 'entityform',
@@ -536,46 +535,20 @@ function feature_hr_surveys_field_default_field_instances() {
     ),
     'widget' => array(
       'active' => 1,
-      'module' => 'options',
-      'settings' => array(),
-      'type' => 'options_buttons',
-      'weight' => 2,
-    ),
-  );
-
-  // Exported field_instance: 'entityform-survey-field_habitation_town_area'.
-  $field_instances['entityform-survey-field_habitation_town_area'] = array(
-    'bundle' => 'survey',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'entityreference',
-        'settings' => array(
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
-          'link' => FALSE,
-        ),
-        'type' => 'entityreference_label',
-        'weight' => 10,
+      'module' => 'term_reference_tree',
+      'settings' => array(
+        'cascading_selection' => 0,
+        'filter_view' => '',
+        'leaves_only' => 0,
+        'max_depth' => '',
+        'parent_term_id' => '',
+        'select_parents' => 0,
+        'start_minimized' => 1,
+        'token_display' => '',
+        'track_list' => 0,
       ),
-    ),
-    'entity_type' => 'entityform',
-    'field_name' => 'field_habitation_town_area',
-    'label' => 'Suche in der Nähe von:',
-    'required' => 0,
-    'settings' => array(
-      'hr_surveys_question' => 1,
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'options',
-      'settings' => array(),
-      'type' => 'options_buttons',
-      'weight' => 3,
+      'type' => 'term_reference_tree',
+      'weight' => 2,
     ),
   );
 
@@ -841,7 +814,6 @@ function feature_hr_surveys_field_default_field_instances() {
   t('Pets');
   t('Sonderwünsche:');
   t('Status');
-  t('Suche in der Nähe von:');
   t('Town');
 
   return $field_instances;

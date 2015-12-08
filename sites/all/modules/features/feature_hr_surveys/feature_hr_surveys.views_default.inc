@@ -197,6 +197,101 @@ function feature_hr_surveys_views_default_views() {
   $handler->display->display_options['row_plugin'] = 'entityreference_fields';
   $handler->display->display_options['row_options']['default_field_elements'] = FALSE;
   $handler->display->display_options['defaults']['row_options'] = FALSE;
+
+  /* Display: Seite */
+  $handler = $view->new_display('page', 'Seite', 'page_agency_profile');
+  $handler->display->display_options['defaults']['pager'] = FALSE;
+  $handler->display->display_options['pager']['type'] = 'some';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '1';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['defaults']['style_plugin'] = FALSE;
+  $handler->display->display_options['style_plugin'] = 'flipped';
+  $handler->display->display_options['style_options']['columns'] = array(
+    'field_user_firstname' => 'field_user_firstname',
+    'field_user_lastname' => 'field_user_lastname',
+  );
+  $handler->display->display_options['style_options']['default'] = '-1';
+  $handler->display->display_options['style_options']['info'] = array(
+    'field_user_firstname' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_user_lastname' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+  );
+  $handler->display->display_options['style_options']['flipped_table_header_first_field'] = 0;
+  $handler->display->display_options['defaults']['style_options'] = FALSE;
+  $handler->display->display_options['defaults']['row_plugin'] = FALSE;
+  $handler->display->display_options['defaults']['row_options'] = FALSE;
+  $handler->display->display_options['defaults']['fields'] = FALSE;
+  /* Field: User: First name */
+  $handler->display->display_options['fields']['field_user_firstname']['id'] = 'field_user_firstname';
+  $handler->display->display_options['fields']['field_user_firstname']['table'] = 'field_data_field_user_firstname';
+  $handler->display->display_options['fields']['field_user_firstname']['field'] = 'field_user_firstname';
+  $handler->display->display_options['fields']['field_user_firstname']['label'] = '';
+  $handler->display->display_options['fields']['field_user_firstname']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_user_firstname']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_user_firstname']['settings'] = array(
+    'empty_fields_handler' => '',
+    'empty_fields_emptyfieldtext_empty_text' => '',
+  );
+  /* Field: User: Last name */
+  $handler->display->display_options['fields']['field_user_lastname']['id'] = 'field_user_lastname';
+  $handler->display->display_options['fields']['field_user_lastname']['table'] = 'field_data_field_user_lastname';
+  $handler->display->display_options['fields']['field_user_lastname']['field'] = 'field_user_lastname';
+  $handler->display->display_options['fields']['field_user_lastname']['label'] = 'Full name';
+  $handler->display->display_options['fields']['field_user_lastname']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['field_user_lastname']['alter']['text'] = '[field_user_firstname] [field_user_lastname]';
+  $handler->display->display_options['fields']['field_user_lastname']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_user_lastname']['settings'] = array(
+    'empty_fields_handler' => '',
+    'empty_fields_emptyfieldtext_empty_text' => '',
+  );
+  /* Field: User: E-mail */
+  $handler->display->display_options['fields']['mail']['id'] = 'mail';
+  $handler->display->display_options['fields']['mail']['table'] = 'users';
+  $handler->display->display_options['fields']['mail']['field'] = 'mail';
+  $handler->display->display_options['fields']['mail']['label'] = 'E-Mail';
+  /* Field: User: Last login */
+  $handler->display->display_options['fields']['login']['id'] = 'login';
+  $handler->display->display_options['fields']['login']['table'] = 'users';
+  $handler->display->display_options['fields']['login']['field'] = 'login';
+  $handler->display->display_options['fields']['login']['label'] = 'Letzte Anmeldung';
+  $handler->display->display_options['fields']['login']['date_format'] = 'long';
+  $handler->display->display_options['fields']['login']['second_date_format'] = 'long';
+  $handler->display->display_options['defaults']['sorts'] = FALSE;
+  $handler->display->display_options['defaults']['arguments'] = FALSE;
+  /* Contextual filter: User: Uid */
+  $handler->display->display_options['arguments']['uid']['id'] = 'uid';
+  $handler->display->display_options['arguments']['uid']['table'] = 'users';
+  $handler->display->display_options['arguments']['uid']['field'] = 'uid';
+  $handler->display->display_options['arguments']['uid']['default_action'] = 'default';
+  $handler->display->display_options['arguments']['uid']['exception']['title'] = 'Alle';
+  $handler->display->display_options['arguments']['uid']['default_argument_type'] = 'user';
+  $handler->display->display_options['arguments']['uid']['default_argument_options']['user'] = FALSE;
+  $handler->display->display_options['arguments']['uid']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['uid']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['uid']['summary_options']['items_per_page'] = '25';
+  $handler->display->display_options['arguments']['uid']['specify_validation'] = TRUE;
+  $handler->display->display_options['arguments']['uid']['validate']['fail'] = 'access denied';
+  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Filter criterion: User: Active */
+  $handler->display->display_options['filters']['status']['id'] = 'status';
+  $handler->display->display_options['filters']['status']['table'] = 'users';
+  $handler->display->display_options['filters']['status']['field'] = 'status';
+  $handler->display->display_options['filters']['status']['value'] = '1';
+  $handler->display->display_options['filters']['status']['group'] = 1;
+  $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
+  $handler->display->display_options['path'] = 'user/%';
   $translatables['agencies_contact'] = array(
     t('Master'),
     t('more'),
@@ -214,6 +309,11 @@ function feature_hr_surveys_views_default_views() {
     t('last »'),
     t('[field_user_firstname] [field_user_lastname]'),
     t('Entity Reference'),
+    t('Seite'),
+    t('Full name'),
+    t('E-Mail'),
+    t('Letzte Anmeldung'),
+    t('Alle'),
   );
   $export['agencies_contact'] = $view;
 
@@ -370,7 +470,6 @@ function feature_hr_surveys_views_default_views() {
   /* Display: Agency information (Block) */
   $handler = $view->new_display('block', 'Agency information (Block)', 'block_agency_info');
   $handler->display->display_options['defaults']['title'] = FALSE;
-  $handler->display->display_options['title'] = '<none>';
   $handler->display->display_options['defaults']['style_plugin'] = FALSE;
   $handler->display->display_options['style_plugin'] = 'flipped';
   $handler->display->display_options['style_options']['columns'] = array(
@@ -554,7 +653,6 @@ function feature_hr_surveys_views_default_views() {
     t('&nbsp;&nbsp;[view_node]&nbsp;&nbsp;[edit_node]'),
     t('Page'),
     t('Agency information (Block)'),
-    t('<none>'),
     t('Contact'),
     t('[field_user_lastname], [mail]'),
     t('All'),
@@ -582,6 +680,7 @@ function feature_hr_surveys_views_default_views() {
   );
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['query']['options']['distinct'] = TRUE;
   $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['pager']['type'] = 'full';
   $handler->display->display_options['pager']['options']['items_per_page'] = '20';
@@ -843,7 +942,6 @@ function feature_hr_surveys_views_default_views() {
   $handler->display->display_options['fields']['field_habitation_town']['element_type'] = 'span';
   $handler->display->display_options['fields']['field_habitation_town']['element_class'] = 'views-field-holder';
   $handler->display->display_options['fields']['field_habitation_town']['settings'] = array(
-    'link' => 0,
     'empty_fields_handler' => '',
     'empty_fields_emptyfieldtext_empty_text' => '',
   );
@@ -1114,7 +1212,7 @@ function feature_hr_surveys_views_default_views() {
   /* Display: Applicants submission */
   $handler = $view->new_display('page', 'Applicants submission', 'page_applicant_submission');
   $handler->display->display_options['defaults']['title'] = FALSE;
-  $handler->display->display_options['title'] = '<none>';
+  $handler->display->display_options['title'] = 'Applicants survey';
   $handler->display->display_options['defaults']['access'] = FALSE;
   $handler->display->display_options['access']['type'] = 'role';
   $handler->display->display_options['access']['role'] = array(
@@ -1432,9 +1530,15 @@ function feature_hr_surveys_views_default_views() {
   $handler->display->display_options['fields']['field_habitation_town']['field'] = 'field_habitation_town';
   $handler->display->display_options['fields']['field_habitation_town']['element_type'] = 'span';
   $handler->display->display_options['fields']['field_habitation_town']['element_class'] = 'views-field-holder';
+  $handler->display->display_options['fields']['field_habitation_town']['element_default_classes'] = FALSE;
+  $handler->display->display_options['fields']['field_habitation_town']['type'] = 'term_reference_tree';
   $handler->display->display_options['fields']['field_habitation_town']['settings'] = array(
-    'link' => 0,
+    'token_display_selected' => '[term:name]',
+    'token_display_unselected' => '[term:name]',
+    'empty_fields_handler' => '',
+    'empty_fields_emptyfieldtext_empty_text' => '',
   );
+  $handler->display->display_options['fields']['field_habitation_town']['delta_offset'] = '0';
   /* Field: Separator */
   $handler->display->display_options['fields']['nothing_4']['id'] = 'nothing_4';
   $handler->display->display_options['fields']['nothing_4']['table'] = 'views';
@@ -1503,6 +1607,7 @@ function feature_hr_surveys_views_default_views() {
     'empty_fields_emptyfieldtext_empty_text' => '',
   );
   $handler->display->display_options['fields']['field_applicant_agencies']['delta_offset'] = '0';
+  $handler->display->display_options['fields']['field_applicant_agencies']['multi_type'] = 'ul';
   $handler->display->display_options['defaults']['arguments'] = FALSE;
   /* Contextual filter: Entityform Submission: Entityform submission ID */
   $handler->display->display_options['arguments']['entityform_id']['id'] = 'entityform_id';
@@ -1565,7 +1670,7 @@ function feature_hr_surveys_views_default_views() {
     t('&nbsp;&nbsp;[link_entityform]'),
     t('Alle'),
     t('Applicants submission'),
-    t('<none>'),
+    t('Applicants survey'),
     t('Contact information:'),
     t('E-mail'),
     t('&nbsp;'),

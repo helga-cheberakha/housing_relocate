@@ -368,69 +368,22 @@ function feature_hr_surveys_field_default_field_bases() {
       'type' => 0,
     ),
     'indexes' => array(
-      'target_id' => array(
-        0 => 'target_id',
+      'tid' => array(
+        0 => 'tid',
       ),
     ),
     'locked' => 0,
-    'module' => 'entityreference',
+    'module' => 'taxonomy',
     'settings' => array(
-      'handler' => 'views',
-      'handler_settings' => array(
-        'behaviors' => array(
-          'views-select-list' => array(
-            'status' => 1,
-          ),
-        ),
-        'view' => array(
-          'args' => array(),
-          'display_name' => 'entityreference_1',
-          'view_name' => 'towns_and_areas',
+      'allowed_values' => array(
+        0 => array(
+          'vocabulary' => 'towns',
+          'parent' => 0,
         ),
       ),
-      'target_type' => 'taxonomy_term',
     ),
     'translatable' => 0,
-    'type' => 'entityreference',
-  );
-
-  // Exported field_base: 'field_habitation_town_area'.
-  $field_bases['field_habitation_town_area'] = array(
-    'active' => 1,
-    'cardinality' => -1,
-    'deleted' => 0,
-    'entity_types' => array(),
-    'field_name' => 'field_habitation_town_area',
-    'field_permissions' => array(
-      'type' => 0,
-    ),
-    'indexes' => array(
-      'target_id' => array(
-        0 => 'target_id',
-      ),
-    ),
-    'locked' => 0,
-    'module' => 'entityreference',
-    'settings' => array(
-      'handler' => 'views',
-      'handler_settings' => array(
-        'behaviors' => array(
-          'views-select-list' => array(
-            'status' => 1,
-          ),
-        ),
-        'view' => array(
-          'args' => array(
-            0 => 1,
-          ),
-          'display_name' => 'entityreference_town_areas',
-          'view_name' => 'towns_and_areas',
-        ),
-      ),
-      'target_type' => 'taxonomy_term',
-    ),
-    'translatable' => 0,
-    'type' => 'entityreference',
+    'type' => 'taxonomy_term_reference',
   );
 
   // Exported field_base: 'field_occupants_adults'.

@@ -101,6 +101,11 @@
   float: left;
   width: 33%;
 }
+.field-name-field-habitation-town .term-reference-tree > .term-reference-tree-level > li {margin-bottom: 10px;}
+.field-name-field-habitation-town .term-reference-tree > .term-reference-tree-level > li > .term-reference-tree-level,
+.field-name-field-habitation-town .term-reference-tree > .term-reference-tree-level > li > .term-reference-tree-level > li {
+  margin-bottom: 10px;
+}
 .field-name-field-habitation-town .form-checkboxes .checkbox + .checkbox {margin-top: 0;}
 
 @media all and (min-width: 600px) {
@@ -131,4 +136,9 @@
 a.btn.btn-primary.btn-lg:hover {
   background-color: #286090;
   border-color: #204d74;
+}
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
