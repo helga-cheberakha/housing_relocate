@@ -79,7 +79,7 @@ function hr_notification_submission_agency($entityform, $user) {
       $agency_node = node_load($item['target_id']);
 
       if (isset($agency_node->nid)) {
-        // Gat agency contact
+        // Get agency contact
         $field_agency_user = field_get_items('node', $agency_node, 'field_agency_contact');
 
         if (isset($field_agency_user) && !empty($field_agency_user)) {
@@ -89,6 +89,7 @@ function hr_notification_submission_agency($entityform, $user) {
               $agency_user = user_load($user_uid['target_id']);
 
               if (isset($agency_user->mail) && in_array(HR_AGENCY_ROLE, $agency_user->roles)) {
+                $language = user_preferred_language($user);
                 $mail_to = $agency_user->mail;
                 $mail_from = variable_get('site_mail', ini_get('sendmail_from'));
 
@@ -109,13 +110,51 @@ function hr_notification_submission_agency($entityform, $user) {
                 $body_array = variable_get('hr_notification_agency_ebody', array());
                 $format = (isset($body_array['format']) && !empty($body_array['format'])) ? $body_array['format'] : 'full_html';
                 $body = (isset($body_array['value'])) ? t(check_markup($body_array['value'], $format)) : '';
+
+                // Get applicants documents if they exist
+                $attachments = array();
+                // International pass
+                $pass_field = field_get_items('entityform', $entityform, 'field_applican_interpass');
+                if (isset($pass_field[0]['uri']) && !empty($pass_field[0]['uri'])) {
+                  $pass_url = file_create_url($pass_field[0]['uri']);
+                  $pass_content = file_get_contents($pass_url);
+                  $attachments[] = array(
+                    'filecontent' => $pass_content,
+                    'filename' => $pass_field[0]['filename'],
+                    'filemime' => $pass_field[0]['filemime'],
+                  );
+                }
+                // Visa
+                $visa_field = field_get_items('entityform', $entityform, 'field_applicant_visa');
+                if (isset($visa_field[0]['uri']) && !empty($visa_field[0]['uri'])) {
+                  $visa_url = file_create_url($visa_field[0]['uri']);
+                  $visa_content = file_get_contents($visa_url);
+                  $attachments[] = array(
+                    'filecontent' => $visa_content,
+                    'filename' => $visa_field[0]['filename'],
+                    'filemime' => $visa_field[0]['filemime'],
+                  );
+                }
+                // Work contract
+                $work_contract_field = field_get_items('entityform', $entityform, 'field_applicant_work_contract');
+                if (isset($work_contract_field[0]['uri']) && !empty($work_contract_field[0]['uri'])) {
+                  $work_contract_url = file_create_url($work_contract_field[0]['uri']);
+                  $work_contract_content = file_get_contents($work_contract_url);
+                  $attachments[] = array(
+                    'filecontent' => $work_contract_content,
+                    'filename' => $work_contract_field[0]['filename'],
+                    'filemime' => $work_contract_field[0]['filemime'],
+                  );
+                }
                 
                 $params = array(
                   'subject' => token_replace($subject, $data),
                   'body' => token_replace($body, $data),
+                  'attachments' => $attachments,
                 );
 
-                drupal_mail('hr_notification', 'hr_notification_send_email', $mail_to, language_default(), $params, $mail_from);
+                drupal_mail('hr_notification', 'hr_notification_send_email', $mail_to, $language, $params, $mail_from);
+                
                 $message[] = t('The notification email has been sent to @email (agency @title).', array(
                   '@email' => $mail_to,
                   '@title' => $agency_node->title,
@@ -150,6 +189,12 @@ function hr_notification_mail($key, &$message, $params) {
       );
       $message['subject'] = $params['subject'];
       $message['body'][] = $params['body'];
+
+      // Add attachment when available.
+      if (isset($params['attachments']) && !empty($params['attachments'])) {
+        $message['params']['attachments'] = $params['attachments'];
+      }
+
       break;
   }
 }

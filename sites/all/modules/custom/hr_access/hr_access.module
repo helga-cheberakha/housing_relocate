@@ -340,6 +340,13 @@ function hr_access_form_alter(&$form, $form_state, $form_id) {
         // Add custom submission handler for creating content-type 'agency' when user with role 'agency' was created
         $form['#submit'][] = 'hr_access_form_user_profile_register_form_submit';
       }
+
+      // Do not allow user with role 'agency' edit him email because the hash is based on email.
+      if ($form_id == 'user_profile_form' && isset($form['#user']->roles) && in_array(HR_AGENCY_ROLE, $form['#user']->roles)) {
+        if (isset($form['account']['mail'])) {
+          $form['account']['mail']['#disabled'] = TRUE;
+        }
+      }
       
       // Add custom submission handler for adding hash if it's empty
       $form['#submit'][] = 'hr_access_form_user_profile_form_submit';

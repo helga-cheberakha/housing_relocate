@@ -941,12 +941,12 @@ function feature_hr_surveys_views_default_views() {
   $handler->display->display_options['fields']['field_habitation_town']['field'] = 'field_habitation_town';
   $handler->display->display_options['fields']['field_habitation_town']['element_type'] = 'span';
   $handler->display->display_options['fields']['field_habitation_town']['element_class'] = 'views-field-holder';
+  $handler->display->display_options['fields']['field_habitation_town']['type'] = 'hr_surveys_taxonomy_terms_tree';
   $handler->display->display_options['fields']['field_habitation_town']['settings'] = array(
     'empty_fields_handler' => '',
     'empty_fields_emptyfieldtext_empty_text' => '',
   );
   $handler->display->display_options['fields']['field_habitation_town']['delta_offset'] = '0';
-  $handler->display->display_options['fields']['field_habitation_town']['multi_type'] = 'ul';
   /* Field: Entityform Submission: Agencies (editable) */
   $handler->display->display_options['fields']['field_applicant_agencies_editable']['id'] = 'field_applicant_agencies_editable';
   $handler->display->display_options['fields']['field_applicant_agencies_editable']['table'] = 'field_data_field_applicant_agencies';
@@ -1127,13 +1127,12 @@ function feature_hr_surveys_views_default_views() {
   $handler->display->display_options['fields']['field_habitation_town']['label'] = 'In Frage kommende Bezirke';
   $handler->display->display_options['fields']['field_habitation_town']['element_type'] = 'span';
   $handler->display->display_options['fields']['field_habitation_town']['element_class'] = 'views-field-holder';
+  $handler->display->display_options['fields']['field_habitation_town']['type'] = 'hr_surveys_taxonomy_terms_tree';
   $handler->display->display_options['fields']['field_habitation_town']['settings'] = array(
-    'link' => 0,
     'empty_fields_handler' => '',
     'empty_fields_emptyfieldtext_empty_text' => '',
   );
   $handler->display->display_options['fields']['field_habitation_town']['delta_offset'] = '0';
-  $handler->display->display_options['fields']['field_habitation_town']['multi_type'] = 'ul';
   /* Field: Entityform Submission: Mietbeginn: */
   $handler->display->display_options['fields']['field_habitation_checkin']['id'] = 'field_habitation_checkin';
   $handler->display->display_options['fields']['field_habitation_checkin']['table'] = 'field_data_field_habitation_checkin';
@@ -1528,17 +1527,14 @@ function feature_hr_surveys_views_default_views() {
   $handler->display->display_options['fields']['field_habitation_town']['id'] = 'field_habitation_town';
   $handler->display->display_options['fields']['field_habitation_town']['table'] = 'field_data_field_habitation_town';
   $handler->display->display_options['fields']['field_habitation_town']['field'] = 'field_habitation_town';
-  $handler->display->display_options['fields']['field_habitation_town']['element_type'] = 'span';
-  $handler->display->display_options['fields']['field_habitation_town']['element_class'] = 'views-field-holder';
-  $handler->display->display_options['fields']['field_habitation_town']['element_default_classes'] = FALSE;
-  $handler->display->display_options['fields']['field_habitation_town']['type'] = 'term_reference_tree';
+  $handler->display->display_options['fields']['field_habitation_town']['label'] = 'In Frage kommende Bezirke';
+  $handler->display->display_options['fields']['field_habitation_town']['type'] = 'hr_surveys_taxonomy_terms_tree';
   $handler->display->display_options['fields']['field_habitation_town']['settings'] = array(
-    'token_display_selected' => '[term:name]',
-    'token_display_unselected' => '[term:name]',
     'empty_fields_handler' => '',
     'empty_fields_emptyfieldtext_empty_text' => '',
   );
   $handler->display->display_options['fields']['field_habitation_town']['delta_offset'] = '0';
+  $handler->display->display_options['fields']['field_habitation_town']['multi_type'] = 'ul';
   /* Field: Separator */
   $handler->display->display_options['fields']['nothing_4']['id'] = 'nothing_4';
   $handler->display->display_options['fields']['nothing_4']['table'] = 'views';

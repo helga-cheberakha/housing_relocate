@@ -1,5 +1,7 @@
 <?php
 /**
  * @file
- * Drupal needs this blank file.
+ * Code for the Feature HR Notification feature.
  */
+
+include_once 'feature_hr_notification.features.inc';

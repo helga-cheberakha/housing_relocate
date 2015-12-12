@@ -113,6 +113,9 @@
   .hr-group-inline > .two-columns {
     width: 50%;
   }
+  .form-managed-file {
+    width: 50%;
+  }
 }
 
 /*

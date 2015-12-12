@@ -1,0 +1,7 @@
+.term-tree-list .term-child:before,
+.term-tree-list .term-child:after {
+  content: '(';
+}
+.term-tree-list .term-child:after {
+  content: ')';
+}

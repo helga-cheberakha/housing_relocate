@@ -72,6 +72,9 @@ function feature_hr_surveys_field_default_field_bases() {
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_agency_town',
+    'field_permissions' => array(
+      'type' => 0,
+    ),
     'indexes' => array(
       'target_id' => array(
         0 => 'target_id',
@@ -80,18 +83,17 @@ function feature_hr_surveys_field_default_field_bases() {
     'locked' => 0,
     'module' => 'entityreference',
     'settings' => array(
-      'handler' => 'base',
+      'handler' => 'views',
       'handler_settings' => array(
         'behaviors' => array(
           'views-select-list' => array(
             'status' => 1,
           ),
         ),
-        'sort' => array(
-          'type' => 'none',
-        ),
-        'target_bundles' => array(
-          'towns' => 'towns',
+        'view' => array(
+          'args' => array(),
+          'display_name' => 'entityreference_1',
+          'view_name' => 'towns_and_areas',
         ),
       ),
       'target_type' => 'taxonomy_term',
@@ -368,22 +370,31 @@ function feature_hr_surveys_field_default_field_bases() {
       'type' => 0,
     ),
     'indexes' => array(
-      'tid' => array(
-        0 => 'tid',
+      'target_id' => array(
+        0 => 'target_id',
       ),
     ),
     'locked' => 0,
-    'module' => 'taxonomy',
+    'module' => 'entityreference',
     'settings' => array(
-      'allowed_values' => array(
-        0 => array(
-          'vocabulary' => 'towns',
-          'parent' => 0,
+      'handler' => 'base',
+      'handler_settings' => array(
+        'behaviors' => array(
+          'views-select-list' => array(
+            'status' => 1,
+          ),
+        ),
+        'sort' => array(
+          'type' => 'none',
+        ),
+        'target_bundles' => array(
+          'towns' => 'towns',
         ),
       ),
+      'target_type' => 'taxonomy_term',
     ),
     'translatable' => 0,
-    'type' => 'taxonomy_term_reference',
+    'type' => 'entityreference',
   );
 
   // Exported field_base: 'field_occupants_adults'.

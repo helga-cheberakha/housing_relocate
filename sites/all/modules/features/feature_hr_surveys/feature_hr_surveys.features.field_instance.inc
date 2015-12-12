@@ -516,12 +516,13 @@ function feature_hr_surveys_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'module' => 'taxonomy',
+        'module' => 'entityreference',
         'settings' => array(
           'empty_fields_emptyfieldtext_empty_text' => '',
           'empty_fields_handler' => '',
+          'link' => FALSE,
         ),
-        'type' => 'taxonomy_term_reference_link',
+        'type' => 'entityreference_label',
         'weight' => 12,
       ),
     ),
@@ -537,12 +538,12 @@ function feature_hr_surveys_field_default_field_instances() {
       'active' => 1,
       'module' => 'term_reference_tree',
       'settings' => array(
-        'cascading_selection' => 0,
+        'cascading_selection' => 1,
         'filter_view' => '',
         'leaves_only' => 0,
         'max_depth' => '',
         'parent_term_id' => '',
-        'select_parents' => 0,
+        'select_parents' => 1,
         'start_minimized' => 1,
         'token_display' => '',
         'track_list' => 0,

@@ -19,7 +19,7 @@ function feature_hr_notification_default_rules_configuration() {
         { "mail" : {
             "to" : "[site:mail]",
             "subject" : "Form Submission: [entityform:type]",
-            "message" : "[entityform:type] has been submitted by [entityform:field-applicant-name], [entityform:field_applicant_email] on [entityform:created].",
+            "message" : "[entityform:type] has been submitted by [entityform:field-applicant-name], [entityform:field_applicant_email] on [entityform:created]. Please review \\u003Ca href=\\u0022[site:url]entityform\\/[entityform:entityform-id]\\u0022\\u003Ehere\\u003C\\/a\\u003E.",
             "language" : [ "" ]
           }
         }

@@ -183,7 +183,7 @@ function hr_surveys_field_widget_form_alter(&$element, &$form_state, $context) {
 
       if (isset($field_towns) && !empty($field_towns)) {
         foreach ($field_towns as $item) {
-          $town_tids[] = $item['tid'];
+          $town_tids[] = $item['target_id'];
         }
 
         // If town exists get all agencies which have references to the same town
@@ -294,6 +294,10 @@ function hr_surveys_field_formatter_info() {
       'label' => t('Text as email'),
       'field types' => array('text'),
     ),
+    'hr_surveys_taxonomy_terms_tree' => array(
+      'label' => t('Taxonomy terms tree'),
+      'field types' => array('entityreference'),
+    ),
   );
 }
 
@@ -320,6 +324,16 @@ function hr_surveys_field_formatter_view($entity_type, $entity, $field, $instanc
         );
       }
       break;
+    case 'hr_surveys_taxonomy_terms_tree':
+      if (!empty($items)) {
+        $element[] = array(
+          '#theme' => 'hr_surveys_terms_tree_list',
+          '#data' => $items,
+          '#display' => $display,
+          '#attached' => array('css' => array(drupal_get_path('module', 'hr_surveys') . '/css/hr_surveys_terms_tree.css')),
+        );
+      }
+      break;
   }
 
   return $element;
@@ -335,6 +349,9 @@ function hr_surveys_theme() {
     ),
     'hr_surveys_textemail_formatter' => array(
       'variables' => array('item' => NULL),
+    ),
+    'hr_surveys_terms_tree_list' => array(
+      'render element' => 'element',
     ),
   );
 }
@@ -359,6 +376,51 @@ function theme_hr_surveys_textemail_formatter($variables) {
     $output = (valid_email_address($item['value'])) ? l($item['value'], 'mailto:' . $item['value'], array('absolute' => TRUE)) : $item['value'];
   }
 
+  return $output;
+}
+
+/**
+ * Themes the term tree display (as opposed to the select widget).
+ */
+function theme_hr_surveys_terms_tree_list($variables) {
+  $element = &$variables['element'];
+  $data = &$element['#data'];
+
+  $tree = array();
+
+  // For each selected term:
+  foreach ($data as $item) {
+    // Loop if the term ID is not zero:
+    $values = array();
+    $tid = $item['target_id'];
+    $original_tid = $tid;
+    while ($tid != 0) {
+      // Unshift the term onto an array
+      array_unshift($values, $tid);
+      // Repeat with parent term
+      $tid = _hr_surveys_terms_tree_get_parent($tid);
+    }
+
+    $current = &$tree;
+    // For each term in the above array:
+    foreach ($values as $tid) {
+      if (!isset($current['children'][$tid])) {
+        $current['children'][$tid] = array('selected' => FALSE);
+      }
+
+      // If this is the last value in the array, tree[children][term_id][selected] = true
+      if ($tid == $original_tid) {
+        $current['children'][$tid]['selected'] = TRUE;
+      }
+
+      $current['children'][$tid]['tid'] = $tid;
+      $current = &$current['children'][$tid];
+    }
+  }
+
+  $output = "<div class='term-tree-list'>";
+  $output .= _hr_surveys_terms_tree_output_list_level($element, $tree);
+  $output .= "</div>";
   return $output;
 }
 
@@ -572,4 +634,68 @@ function _hr_surveys_entityform_create_user($mail, $entityform) {
 function _hr_surveys_entityform_add_user($uid, $entityform) {
   $entityform->uid = $uid;
   entityform_save($entityform);
+}
+
+function _hr_surveys_terms_tree_get_parent($tid) {
+  $q = db_query_range("SELECT h.parent FROM {taxonomy_term_hierarchy} h WHERE h.tid = :tid", 0, 1, array(':tid' => $tid));
+
+  $t = 0;
+  foreach ($q as $term) {
+    $t = $term->parent;
+  }
+
+  return $t;
+}
+
+/**
+ * Helper function to output a single level of the term reference tree
+ * display.
+ */
+function _hr_surveys_terms_tree_output_list_level(&$element, &$tree) {
+  if (isset($tree['children']) && is_array($tree['children']) && count($tree['children'] > 0)) {
+    $output = '<ul class="term">';
+    
+    foreach ($tree['children'] as &$item) {
+      $term = taxonomy_term_load($item['tid']);
+      $class = $item['selected'] ? 'selected' : 'unselected';
+      $output .= "<li class='$class'>";
+      $output .= entity_label('taxonomy_term', $term);
+      if (isset($item['children'])) {
+        $output .= _hr_surveys_terms_tree_output_list_level_child($element, $item);
+      }
+      $output .= "</li>";
+    }
+
+    $output .= '</ul>';
+    return $output;
+  }
+}
+
+/**
+ * Helper function to output a child single level of the term reference tree
+ * display.
+ */
+function _hr_surveys_terms_tree_output_list_level_child(&$element, &$tree) {
+  if (isset($tree['children']) && is_array($tree['children']) && count($tree['children'] > 0)) {
+    $output = '&nbsp;<span class="term-child">';
+    
+    $i = 1;
+    foreach ($tree['children'] as &$item) {
+      $term = taxonomy_term_load($item['tid']);
+      $output .= entity_label('taxonomy_term', $term);
+
+      if ($i < count($tree['children'])) {
+        $output .= ', ';
+      }
+
+      if (isset($item['children'])) {
+        $output .= _hr_surveys_terms_tree_output_list_level_child($element, $item);
+      }
+
+      $i++;
+    }
+
+    $output .= '</span>';
+    return $output;
+  }
 }
